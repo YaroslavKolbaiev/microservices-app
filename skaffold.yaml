@@ -1,0 +1,17 @@
+apiVersion: skaffold/v4beta5
+kind: Config
+manifests:
+  rawYaml:
+    - ./infra/k8s/*
+build:
+  local:
+    push: false
+  artifacts:
+    - image: irick05nazar/auth
+      context: auth
+      sync:
+        manual:
+          - src: '*.src/**/*.ts'
+            dest: .
+      docker:
+        dockerfile: Dockerfile
