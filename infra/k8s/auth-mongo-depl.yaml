@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: auth-mongo
-          image: mongo
+          image: mongo # official ready to use image on docker hub
 ---
 apiVersion: v1
 kind: Service
@@ -24,7 +24,7 @@ spec:
   selector:
     app: auth-mongo
   ports:
-    - name: auth-mongo
+    - name: auth-mongo # name is not realy important. use any name u like
       protocol: TCP
       port: 27017 # standard mongo port
       targetPort: 27017

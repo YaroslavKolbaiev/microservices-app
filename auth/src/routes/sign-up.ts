@@ -2,6 +2,8 @@ import express, { Request, Response } from 'express';
 import { body, validationResult } from 'express-validator';
 import { RequestValidationError } from '../errors/request-validation';
 import { DatabaseConnectionError } from '../errors/database-connection';
+import { User } from '../models/User';
+import { BadRequest } from '../errors/badRequest';
 
 export const signUpRouter = express.Router();
 
@@ -16,7 +18,7 @@ signUpRouter.post(
       .withMessage('Password must be beetween 4 and 20 characters'),
   ], // validation implemented as midleware using express-validator package
   // midleware
-  (req: Request, res: Response) => {
+  async (req: Request, res: Response) => {
     const errors = validationResult(req); // any errors coming from user request
 
     // if erors array is not empty we run bellow command
@@ -26,10 +28,17 @@ signUpRouter.post(
 
     const { email, password } = req.body;
 
-    console.log('User is being created...');
+    const userExists = await User.findOne({ email });
 
-    throw new DatabaseConnectionError();
+    if (userExists) throw new BadRequest('User Already exists');
 
-    res.send('Sign-UP route is running...');
+    // we use custom method "build" to create a new user
+    const newUser = User.build({
+      email,
+      password,
+    });
+    await newUser.save();
+
+    res.status(201).send(newUser);
   }
 );

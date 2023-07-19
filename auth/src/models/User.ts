@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { Password } from '../helpers/password';
 
 // Interface that describes the properties
 // that are required to create a new user
@@ -9,8 +10,8 @@ interface UserAttrs {
 
 // An interface that describes the properties
 // that a User Model has
-interface UserModel extends mongoose.Model<any> {
-  build(attrs: UserAttrs): any;
+interface UserModel extends mongoose.Model<UserDoc> {
+  build(attrs: UserAttrs): UserDoc;
 }
 
 // An interface that describes the properties
@@ -31,10 +32,26 @@ const userSchema = new mongoose.Schema({
   },
 });
 
+// midleware function in mongoose.
+//everytime we attemt to save document in database we are going to execute this fn
+userSchema.pre('save', async function (done) {
+  // to acces "this" we use function() instead of arrow function
+  if (this.isModified('password')) {
+    // above code means we want to hash password if it was modified
+    // when user just newly created mongoose thinks it modified
+    // for ex. if only e-mail changed password not need to be hashed again
+    const hashed = await Password.toHash(this.get('password'));
+    this.set('password', hashed);
+  }
+
+  done(); // mongoose built in method closing all async work to be done
+});
+
+// custom method to allow type definition when creating new user
 userSchema.statics.build = (attrs: UserAttrs) => {
   return new User(attrs);
 };
 
-const User = mongoose.model<any, UserModel>('User', userSchema);
+const User = mongoose.model<UserAttrs, UserModel>('User', userSchema);
 
 export { User };
