@@ -15,6 +15,7 @@ spec:
       containers:
         - name: auth
           image: irick05nazar/auth
+          #image: us.gcr.io/microservices-dev-392723/auth
 ---
 apiVersion: v1
 kind: Service
