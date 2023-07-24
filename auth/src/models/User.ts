@@ -21,16 +21,31 @@ interface UserDoc extends mongoose.Document {
   password: string;
 }
 
-const userSchema = new mongoose.Schema({
-  email: {
-    type: String,
-    required: true,
+const userSchema = new mongoose.Schema(
+  {
+    email: {
+      type: String,
+      required: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
   },
-  password: {
-    type: String,
-    required: true,
-  },
-});
+  {
+    // by running bellow code we tell to mongoose that
+    // we want to exclude password and __v properties in response object
+    toJSON: {
+      transform(doc, ret) {
+        // ret is return object
+        ret.id = ret._id; // assign id a value of _id(standard from mongoose)
+        delete ret._id;
+        delete ret.password;
+        delete ret.__v;
+      },
+    },
+  }
+);
 
 // midleware function in mongoose.
 //everytime we attemt to save document in database we are going to execute this fn

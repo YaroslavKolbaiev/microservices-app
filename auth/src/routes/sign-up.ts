@@ -1,15 +1,15 @@
 import express, { Request, Response } from 'express';
-import { body, validationResult } from 'express-validator';
-import { RequestValidationError } from '../errors/request-validation';
-import { DatabaseConnectionError } from '../errors/database-connection';
+import { body } from 'express-validator';
+import jwt from 'jsonwebtoken';
 import { User } from '../models/User';
-import { BadRequest } from '../errors/badRequest';
+import { BadRequest } from '../errors/bad-request';
+import { validateRequest } from '../middlewares/validate-request';
 
 export const signUpRouter = express.Router();
 
 signUpRouter.post(
   '/api/users/sign-up',
-  // middleware
+  // middleware for email and password validation
   [
     body('email').isEmail().withMessage('Email must be valid'),
     body('password')
@@ -17,15 +17,9 @@ signUpRouter.post(
       .isLength({ min: 4, max: 20 })
       .withMessage('Password must be beetween 4 and 20 characters'),
   ], // validation implemented as midleware using express-validator package
-  // midleware
+  // middleware for request.
+  validateRequest,
   async (req: Request, res: Response) => {
-    const errors = validationResult(req); // any errors coming from user request
-
-    // if erors array is not empty we run bellow command
-    if (!errors.isEmpty()) {
-      throw new RequestValidationError(errors.array());
-    }
-
     const { email, password } = req.body;
 
     const userExists = await User.findOne({ email });
@@ -38,6 +32,20 @@ signUpRouter.post(
       password,
     });
     await newUser.save();
+
+    // Generate JWT
+
+    const userJwt = jwt.sign(
+      { id: newUser.id, email: newUser.email },
+      // i added explanation mark in order to tell type script
+      // that JWT_KEY is defined in index.ts file
+      process.env.JWT_KEY!
+    );
+
+    // Store it in cookie session object using installed "cookie-session" library
+    req.session = {
+      jwt: userJwt,
+    };
 
     res.status(201).send(newUser);
   }
