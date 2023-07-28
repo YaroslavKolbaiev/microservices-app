@@ -15,7 +15,12 @@ spec:
       containers:
         - name: auth
           image: irick05nazar/auth
-          #image: us.gcr.io/microservices-dev-392723/auth
+          #env:
+          #  - name: JWT_KEY # key set in kubectl
+          #    valueFrom:
+          #      secretKeyRef:
+          #        name: jwt-secret # name of secret from kubectl
+          #        key: JWT_KEY # key set in kubectl
 ---
 apiVersion: v1
 kind: Service
