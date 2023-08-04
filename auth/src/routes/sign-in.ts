@@ -1,10 +1,9 @@
 import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
 import { User } from '../models/User';
-import { validateRequest } from '../middlewares/validate-request';
-import { BadRequest } from '../errors/bad-request';
+import { validateRequest, BadRequest } from '@irickmcrs/common';
 import { Password } from '../helpers/password';
-import jwt from 'jsonwebtoken';
+import { jwtHelper } from '../helpers/jwtHelper';
 
 export const signInRouter = express.Router();
 
@@ -32,15 +31,18 @@ signInRouter.post(
 
     if (!isValidPassword) throw new BadRequest('Password is not correct');
 
-    const userJwt = jwt.sign(
-      { id: existingUser.id, email: existingUser.email },
-      process.env.JWT_KEY!
+    const userJwt = jwtHelper.generateAccessToken(
+      existingUser.id,
+      existingUser.email
     );
 
     req.session = {
       jwt: userJwt,
-    };
+    }; // kubernetes
 
-    res.status(200).send(existingUser);
+    res
+      // .cookie('token', userJwt, { httpOnly: true }) // in course video was also added "withCredentials: true"
+      .status(200)
+      .send(existingUser);
   }
 );

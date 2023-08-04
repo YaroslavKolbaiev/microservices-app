@@ -15,12 +15,12 @@ spec:
       containers:
         - name: auth
           image: irick05nazar/auth
-          #env:
-          #  - name: JWT_KEY # key set in kubectl
-          #    valueFrom:
-          #      secretKeyRef:
-          #        name: jwt-secret # name of secret from kubectl
-          #        key: JWT_KEY # key set in kubectl
+          env:
+            - name: JWT_KEY # key set in kubectl
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret # name of secret from kubectl
+                  key: JWT_KEY # key set in kubectl
 ---
 apiVersion: v1
 kind: Service

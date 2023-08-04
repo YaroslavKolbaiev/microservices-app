@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: application-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: application
+  template:
+    metadata:
+      labels:
+        app: application
+    spec:
+      containers:
+        - name: application
+          image: irick05nazar/application
+          env:
+            - name: JWT_KEY # key set in kubectl
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret # name of secret from kubectl
+                  key: JWT_KEY # key set in kubectl
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: application-srv
+spec:
+  selector:
+    app: application
+  ports:
+    - name: application
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
