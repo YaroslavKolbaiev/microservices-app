@@ -1,9 +1,8 @@
 import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
-import jwt from 'jsonwebtoken';
 import { User } from '../models/User';
-import { BadRequest } from '../errors/bad-request';
-import { validateRequest } from '../middlewares/validate-request';
+import { BadRequest, validateRequest } from '@irickmcrs/common';
+import { jwtHelper } from '../helpers/jwtHelper';
 
 export const signUpRouter = express.Router();
 
@@ -36,18 +35,16 @@ signUpRouter.post(
 
     // Generate JWT
 
-    const userJwt = jwt.sign(
-      { id: newUser.id, email: newUser.email },
-      // i added explanation mark in order to tell type script
-      // that JWT_KEY is defined in index.ts file
-      process.env.JWT_KEY!
-    );
+    const userJwt = jwtHelper.generateAccessToken(newUser.id, newUser.email);
 
     // Store it in cookie session object using installed "cookie-session" library
     req.session = {
       jwt: userJwt,
-    };
+    }; // kubernetes implementation
 
-    res.status(201).send(newUser);
+    res
+      // .cookie('token', userJwt, { httpOnly: false })
+      .status(201)
+      .send(newUser); // in course video was also added "withCredentials: true"
   }
 );

@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: auth-depl
+  name: application-depl
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: auth
+      app: application
   template:
     metadata:
       labels:
-        app: auth
+        app: application
     spec:
       containers:
-        - name: auth
-          image: irick05nazar/auth
+        - name: application
+          image: irick05nazar/application
           env:
             - name: JWT_KEY # key set in kubectl
               valueFrom:
@@ -25,12 +25,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: auth-srv
+  name: application-srv
 spec:
   selector:
-    app: auth
+    app: application
   ports:
-    - name: auth
+    - name: application
       protocol: TCP
       port: 3000
       targetPort: 3000

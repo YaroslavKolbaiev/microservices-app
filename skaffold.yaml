@@ -15,6 +15,14 @@ build:
             dest: .
       docker:
         dockerfile: Dockerfile
+    - image: irick05nazar/application
+      context: application
+      sync:
+        manual:
+          - src: '*.src/**/*.ts'
+            dest: .
+      docker:
+        dockerfile: Dockerfile
     - image: irick05nazar/client
       context: client
       sync:

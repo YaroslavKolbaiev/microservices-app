@@ -101,3 +101,32 @@ config.watchOptions.poll = 300;
 return config;
 },
 };
+
+## LECTURE 231
+
+Node Alpine Docker images are now likely using the v16 version of Node, so, we will again encounter a situation that will require a catch block.
+
+Change this code in client/pages/index.js
+
+const LandingPage = ({ currentUser }) => {
+console.log(currentUser);
+axios.get('/api/users/currentuser');
+
+return <h1>Landing Page</h1>;
+};
+to this:
+
+const LandingPage = ({ currentUser }) => {
+console.log(currentUser);
+axios.get('/api/users/currentuser').catch((err) => {
+console.log(err.message);
+});
+
+return <h1>Landing Page</h1>;
+};
+
+## LECTURE 256 (NPM COMMAND)
+
+npm publish --access public
+
+npm update <pakage_name>
