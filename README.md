@@ -130,3 +130,5 @@ return <h1>Landing Page</h1>;
 npm publish --access public
 
 npm update <pakage_name>
+
+## New Lecture
