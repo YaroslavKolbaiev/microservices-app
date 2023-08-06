@@ -3,19 +3,20 @@ import mongoose from 'mongoose';
 import { app } from './app';
 
 const start = async () => {
-  // check if JWT_KEY exists in env before running code.
+  // check if MONGO_URL and JWT exists in env before running code.
   if (!process.env.JWT_KEY) {
     throw new Error('JWT must be defined');
   }
+  if (!process.env.MONGO_URL) {
+    throw new Error('MONGO_URL must be defined');
+  }
   try {
-    // await mongoose.connect('mongodb://auth-mongo-srv:27017/auth'); with kuberneties
-    // await mongoose.connect(process.env.MONGO_URL!); // with mongo Atlas
-    console.log('I will run mongo here...');
+    await mongoose.connect(process.env.MONGO_URL); // with mongo Atlas
   } catch (error) {
     console.log(error);
   }
   app.listen(3002, () => {
-    console.log('Listening on port 3000');
+    console.log('Listening on port 3002');
   });
 };
 start();

@@ -40,6 +40,8 @@ app.use(signUpRouter);
 app.all('*', async () => {
   throw new NotFoundError();
 });
+
+// middleware for catching errors
 app.use(errorMiddleware);
 
 export { app };

@@ -16,6 +16,7 @@ spec:
         - name: auth
           image: irick05nazar/auth
           env:
+            - MONGO_URL: 'mongodb://auth-mongo-srv:27017/auth'
             - name: JWT_KEY # key set in kubectl
               valueFrom:
                 secretKeyRef:

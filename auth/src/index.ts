@@ -7,9 +7,12 @@ const start = async () => {
   if (!process.env.JWT_KEY) {
     throw new Error('JWT must be defined');
   }
+  if (!process.env.MONGO_URL) {
+    throw new Error('MONGO_URL must be defined');
+  }
   try {
     // await mongoose.connect('mongodb://auth-mongo-srv:27017/auth'); with kuberneties
-    await mongoose.connect(process.env.MONGO_URL!); // with mongo Atlas
+    await mongoose.connect(process.env.MONGO_URL); // with mongo Atlas
   } catch (error) {
     console.log(error);
   }
