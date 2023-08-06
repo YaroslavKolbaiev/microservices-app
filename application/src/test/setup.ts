@@ -2,65 +2,74 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 import { app } from '../app';
 import request from 'supertest';
+import jwt from 'jsonwebtoken';
 
 // we declare new global var
 declare global {
-  var signup: () => Promise<string[]>; // signin is function return Promise and promise returns array of strings
+  var signup: () => string[]; // signin is function return Promise and promise returns array of strings
 }
 
 // setup file for jest. configuration for fake database.
 
-let mongo: any;
+// let mongo: any;
 
-// hook function. runs before all of our tests.
-beforeAll(async () => {
-  // process.env.JWT_KEY = 'asdasf';
-  // mongo = await MongoMemoryServer.create();
-  // const mongoUri = mongo.getUri();
+// // hook function. runs before all of our tests.
+// beforeAll(async () => {
+//   // process.env.JWT_KEY = 'asdasf';
+//   // mongo = await MongoMemoryServer.create();
+//   // const mongoUri = mongo.getUri();
 
-  // await mongoose.connect(mongoUri, {});
+//   // await mongoose.connect(mongoUri, {});
 
-  console.log('before all');
-});
+//   console.log('before all');
+// });
 
-beforeEach(async () => {
-  // find all existing collections
-  // const collections = await mongoose.connection.db.collections();
+// beforeEach(async () => {
+//   // find all existing collections
+//   // const collections = await mongoose.connection.db.collections();
 
-  // // reset all data before each test that we run
-  // for (let collection of collections) {
-  //   await collection.deleteMany({});
-  // }
+//   // // reset all data before each test that we run
+//   // for (let collection of collections) {
+//   //   await collection.deleteMany({});
+//   // }
 
-  console.log('before each');
-});
+//   console.log('before each');
+// });
 
-afterAll(async () => {
-  // if (mongo) {
-  //   await mongo.stop();
-  // }
-  // await mongoose.connection.close();
+// afterAll(async () => {
+//   // if (mongo) {
+//   //   await mongo.stop();
+//   // }
+//   // await mongoose.connection.close();
 
-  console.log('after all');
-});
+//   console.log('after all');
+// });
 
-// helper function for sign-in.
-// implemented as a global for accessing without import
-// you can also create a normal helper fn in separate folder
+global.signup = () => {
+  // Build a JWT payload. {id, email}
 
-global.signup = async () => {
-  const email = 'test@test.com';
-  const password = 'password';
+  const payload = {
+    email: 'any-email@test.com',
+    id: new mongoose.Types.ObjectId().toHexString(), // randomly generate new id for each function call
+  };
 
-  const res = await request(app)
-    .post('/api/users/sign-up') // immitating successfull sign-up
-    .send({
-      email,
-      password,
-    }) // request body
-    .expect(201);
+  // create the JWT
 
-  const cookie = res.get('Set-Cookie');
+  const token = jwt.sign(payload, 'secret-key');
 
-  return cookie;
+  // build session Object. {jwt: MY_JWT}
+
+  const session = { jwt: token };
+
+  // Turn session in JSON
+
+  const sessionJSON = JSON.stringify(session);
+
+  // Take JSON and decode it ass base64
+
+  const base64 = Buffer.from(sessionJSON).toString('base64');
+
+  // return a string with the cookie with encoded data
+
+  return [`session=${base64}`];
 };

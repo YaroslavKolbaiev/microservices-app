@@ -18,6 +18,8 @@ signUpRouter.post(
       .withMessage('Password must be beetween 4 and 20 characters'),
   ],
   // middleware for request.
+  // express-validator if there are errors will push all errors into array
+  // 'validateRequest' middleware checks if array is empty, if not it throws and error
   validateRequest,
   async (req: Request, res: Response) => {
     const { email, password } = req.body;

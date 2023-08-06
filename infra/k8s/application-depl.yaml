@@ -16,6 +16,8 @@ spec:
         - name: application
           image: irick05nazar/application
           env:
+            - name: MONGO_URL
+              value: 'mongodb://application-mongo-srv:27017/application'
             - name: JWT_KEY # key set in kubectl
               valueFrom:
                 secretKeyRef:

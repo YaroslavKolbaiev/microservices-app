@@ -17,6 +17,13 @@ spec:
                 name: auth-srv
                 port:
                   number: 3000
+          - path: /api/application/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: application-srv
+                port:
+                  number: 3000
           - path: /?(.*) # this regex catches all paths. client service always at the bottom
             pathType: Prefix
             backend:

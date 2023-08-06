@@ -9,16 +9,16 @@ interface UserAttrs {
 }
 
 // An interface that describes the properties
-// that a User Model has
-interface UserModel extends mongoose.Model<UserDoc> {
-  build(attrs: UserAttrs): UserDoc;
-}
-
-// An interface that describes the properties
 // taht a User Document has
 interface UserDoc extends mongoose.Document {
   email: string;
   password: string;
+}
+
+// An interface that describes the properties
+// that a User Model has
+interface UserModel extends mongoose.Model<UserDoc> {
+  build(attrs: UserAttrs): UserDoc;
 }
 
 const userSchema = new mongoose.Schema(
@@ -62,7 +62,7 @@ userSchema.pre('save', async function (done) {
   done(); // mongoose built in method closing all async work to be done
 });
 
-// custom method to allow type definition when creating new user
+// we create custom method to allow type definition when creating new user
 userSchema.statics.build = (attrs: UserAttrs) => {
   return new User(attrs);
 };
