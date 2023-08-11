@@ -7,6 +7,8 @@ import {
   validateRequest,
 } from '@irickmcrs/common';
 import { body } from 'express-validator';
+import { natsWrapper } from '../nats-wraper';
+import { TicketUpdatedPublisher } from '../events/publishers/ticket-updeted-publisher';
 
 export const updateRoute = express.Router();
 
@@ -39,6 +41,15 @@ updateRoute.put(
       price,
     }); // updates ticket in memory
     await ticket.save(); // updates ticket in MONGO DB
+
+    const data = {
+      id: ticket.id,
+      title: ticket.title,
+      price: ticket.price,
+      userId: ticket.userId,
+    };
+
+    new TicketUpdatedPublisher(natsWrapper.client).publish(data);
 
     // try to implement "UpdateOne"
 
