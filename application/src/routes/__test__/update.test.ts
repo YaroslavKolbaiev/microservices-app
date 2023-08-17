@@ -1,11 +1,12 @@
 import request from 'supertest';
 import { app } from '../../app';
 import mongoose from 'mongoose';
+import { natsWrapper } from '../../nats-wraper';
 
 it('returns a 404 if provided ID not exists', async () => {
   const id = new mongoose.Types.ObjectId().toHexString();
   await request(app)
-    .put(`api/application/${id}`)
+    .put(`/api/application/${id}`)
     .set('Cookie', global.signup())
     .send({
       title: 'Hello World!',
@@ -16,7 +17,7 @@ it('returns a 404 if provided ID not exists', async () => {
 it('returns a 401 if user is not authenticated', async () => {
   const id = new mongoose.Types.ObjectId().toHexString();
   await request(app)
-    .put(`api/application/${id}`)
+    .put(`/api/application/${id}`)
     .send({
       title: 'Hello World!',
       price: 40,
@@ -25,7 +26,7 @@ it('returns a 401 if user is not authenticated', async () => {
 });
 it('returns a 401 if user does not own the ticket', async () => {
   const res = await request(app)
-    .post('api/application')
+    .post('/api/application')
     .set('Cookie', global.signup()) // one specific id is generated in cookies
     .send({
       title: 'Hello World!',
@@ -33,7 +34,7 @@ it('returns a 401 if user does not own the ticket', async () => {
     });
 
   await request(app)
-    .put(`api/application/${res.body.id}`)
+    .put(`/api/application/${res.body.id}`)
     .set('Cookie', global.signup()) // differrent id then previous one is generated in cookies
     .send({
       title: 'Hello another World!',
@@ -44,7 +45,7 @@ it('returns a 401 if user does not own the ticket', async () => {
 it('returns a 400 if provided an invalid title or price', async () => {
   const cookie = global.signup(); // one cookie is generated
   const res = await request(app)
-    .post('api/application')
+    .post('/api/application')
     .set('Cookie', cookie) // same id will be provided from one cookie
     .send({
       title: 'Hello World!',
@@ -52,7 +53,7 @@ it('returns a 400 if provided an invalid title or price', async () => {
     });
 
   await request(app)
-    .put(`api/application/${res.body.id}`)
+    .put(`/api/application/${res.body.id}`)
     .set('Cookie', cookie) // same id will be provided from one cookie
     .send({
       title: '',
@@ -61,7 +62,7 @@ it('returns a 400 if provided an invalid title or price', async () => {
     .expect(400);
 
   await request(app)
-    .put(`api/application/${res.body.id}`)
+    .put(`/api/application/${res.body.id}`)
     .set('Cookie', cookie) // same id will be provided from one cookie
     .send({
       title: 'New World',
@@ -72,7 +73,7 @@ it('returns a 400 if provided an invalid title or price', async () => {
 it('updates ticket if all data is valid', async () => {
   const cookie = global.signup(); // one cookie is generated
   const res = await request(app)
-    .post('api/application')
+    .post('/api/application')
     .set('Cookie', cookie) // same id will be provided from one cookie
     .send({
       title: 'Hello World!',
@@ -80,7 +81,7 @@ it('updates ticket if all data is valid', async () => {
     });
 
   await request(app)
-    .put(`api/application/${res.body.id}`)
+    .put(`/api/application/${res.body.id}`)
     .set('Cookie', cookie) // same id will be provided from one cookie
     .send({
       title: 'New Title',
@@ -89,9 +90,31 @@ it('updates ticket if all data is valid', async () => {
     .expect(200);
 
   const updatedTicketresponse = await request(app)
-    .put(`api/application/${res.body.id}`)
+    .get(`/api/application/${res.body.id}`)
     .send();
 
   expect(updatedTicketresponse.body.title).toEqual('New Title');
   expect(updatedTicketresponse.body.price).toEqual(24);
+});
+
+it('publishes an event', async () => {
+  const cookie = global.signup(); // one cookie is generated
+  const res = await request(app)
+    .post('/api/application')
+    .set('Cookie', cookie) // same id will be provided from one cookie
+    .send({
+      title: 'Hello World!',
+      price: 44,
+    });
+
+  await request(app)
+    .put(`/api/application/${res.body.id}`)
+    .set('Cookie', cookie) // same id will be provided from one cookie
+    .send({
+      title: 'New Title',
+      price: 24,
+    })
+    .expect(200);
+
+  expect(natsWrapper.client.publish).toHaveBeenCalled();
 });

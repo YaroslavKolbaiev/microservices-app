@@ -14,34 +14,34 @@ let mongo: any;
 
 // hook function. runs before all of our tests.
 beforeAll(async () => {
-  // process.env.JWT_KEY = 'asdasf';
-  // mongo = await MongoMemoryServer.create();
-  // const mongoUri = mongo.getUri();
+  process.env.JWT_KEY = 'secret-key';
+  mongo = await MongoMemoryServer.create();
+  const mongoUri = mongo.getUri();
 
-  // await mongoose.connect(mongoUri, {});
+  await mongoose.connect(mongoUri, {});
 
-  console.log('before all');
+  // console.log('before all');
 });
 
 beforeEach(async () => {
   // find all existing collections
-  // const collections = await mongoose.connection.db.collections();
+  const collections = await mongoose.connection.db.collections();
 
-  // // reset all data before each test that we run
-  // for (let collection of collections) {
-  //   await collection.deleteMany({});
-  // }
+  // reset all data before each test that we run
+  for (let collection of collections) {
+    await collection.deleteMany({});
+  }
 
-  console.log('before each');
+  // console.log('before each');
 });
 
 afterAll(async () => {
-  // if (mongo) {
-  //   await mongo.stop();
-  // }
-  // await mongoose.connection.close();
+  if (mongo) {
+    await mongo.stop();
+  }
+  await mongoose.connection.close();
 
-  console.log('after all');
+  // console.log('after all');
 });
 
 // helper function for sign-in.

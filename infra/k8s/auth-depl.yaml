@@ -16,7 +16,11 @@ spec:
         - name: auth
           image: irick05nazar/auth
           env:
-            - MONGO_URL: 'mongodb://auth-mongo-srv:27017/auth'
+            - name: mongoUrl
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-url # name of secret from kubectl
+                  key: mongoUrl # key set in kubectl
             - name: JWT_KEY # key set in kubectl
               valueFrom:
                 secretKeyRef:

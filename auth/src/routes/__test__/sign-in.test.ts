@@ -8,14 +8,14 @@ it('should return 400 with invalid password', async () => {
       email: 'test6@test.com',
       password: 'pa',
     }) // request body
-    .expect(500); // 500 in your error handler. check why in lesson 400 ?
+    .expect(400);
 });
 
 it('should return 400 with missing email and password', async () => {
   return request(app)
     .post('/api/users/sign-in') // request path
     .send({}) // request body
-    .expect(500); // 500 in your error handler. check why in lesson 400 ?
+    .expect(400);
 });
 
 it('fails when email does not exist', async () => {

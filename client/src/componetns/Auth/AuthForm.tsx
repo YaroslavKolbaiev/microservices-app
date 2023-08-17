@@ -30,7 +30,7 @@ const AuthForm = () => {
       const res = await authRequest(
         // change path when use kubernetes to just "/api/users/${path}"
         // it is possible when request is sent from browser(means client)
-        `http://localhost:3000/api/users/${path}`,
+        `/api/users/${path}`,
         'POST',
         email,
         password

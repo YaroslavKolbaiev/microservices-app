@@ -49,6 +49,13 @@ updateRoute.put(
       userId: ticket.userId,
     };
 
+    /** there might be an issue if for some reason after ticket is updated and saved to DB
+     * the error is ocured in NATS publisher and other services will not be notified about transaction
+     * the solution is to store boolean value in DB together with ticket whether or not event has benn published
+     * and create separate code logic to watch that event is published and if not
+     * than retrive transaction and cancell saving updated ticket in DB
+     * above is for awareness and not be implemented (at least now) in the project
+     */
     new TicketUpdatedPublisher(natsWrapper.client).publish(data);
 
     // try to implement "UpdateOne"

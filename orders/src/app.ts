@@ -1,14 +1,14 @@
 import express from 'express';
+// import 'dotenv/config'; // for testing !!! remember!!!!
 import 'express-async-errors'; // for handling async errors
 import { json } from 'body-parser';
 import cookieSession from 'cookie-session'; // library for handling cookies
 // import cors from 'cors'; // no needed if kubernetes is used
-import { currentUserRouter } from './routes/current-user';
-import { signInRouter } from './routes/sign-in';
-import { signOutRouter } from './routes/sign-out';
-import { signUpRouter } from './routes/sign-up';
-import { errorMiddleware, NotFoundError } from '@irickmcrs/common';
-// import cookieParser from 'cookie-parser';
+import { currentUser, errorMiddleware, NotFoundError } from '@irickmcrs/common';
+import { indexRouter } from './routes';
+import { showRouter } from './routes/show';
+import { newRouter } from './routes/new';
+import { deleteRouter } from './routes/delete';
 
 const app = express();
 
@@ -21,21 +21,21 @@ const app = express();
 // );
 
 app.use(json());
-app.set('trust proxy', true); // for proxy of ingress ngnix to support https
+// app.set('trust proxy', true); // for proxy of ingress ngnix to support https
 app.use(
   cookieSession({
     signed: false, // disable encription in order to support diff. programming langs
-    // secure: true, // allow only https. if you dont have test environment use this, otherwise use below
+    // secure: true, // allow only https
     secure: process.env.NODE_ENV !== 'test', // returns true if there is not test environment
   })
 );
 
-// app.use(cookieParser());
+app.use(currentUser);
+app.use(indexRouter);
+app.use(showRouter);
+app.use(newRouter);
+app.use(deleteRouter);
 
-app.use(currentUserRouter);
-app.use(signInRouter);
-app.use(signOutRouter);
-app.use(signUpRouter);
 // if user sends request to not existing route
 app.all('*', async () => {
   throw new NotFoundError();

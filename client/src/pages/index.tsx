@@ -4,6 +4,6 @@ export default function Home({ currentUser }: { currentUser: CurrentUser }) {
   return currentUser ? (
     <div className="">Hello {currentUser.email}</div>
   ) : (
-    <h1>Please proceed to login page</h1>
+    <h1>Please proceed to Login page</h1>
   );
 }

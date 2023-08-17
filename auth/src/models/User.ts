@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { Password } from '../helpers/password';
 
-// Interface that describes the properties
+// Interface that describes the properties of method 'build'
 // that are required to create a new user
 interface UserAttrs {
   email: string;
@@ -17,6 +17,7 @@ interface UserDoc extends mongoose.Document {
 
 // An interface that describes the properties
 // that a User Model has
+// we create custom method to allow type definition when creating new user
 interface UserModel extends mongoose.Model<UserDoc> {
   build(attrs: UserAttrs): UserDoc;
 }
@@ -62,7 +63,7 @@ userSchema.pre('save', async function (done) {
   done(); // mongoose built in method closing all async work to be done
 });
 
-// we create custom method to allow type definition when creating new user
+// to create custom method in Model itself - use statics
 userSchema.statics.build = (attrs: UserAttrs) => {
   return new User(attrs);
 };

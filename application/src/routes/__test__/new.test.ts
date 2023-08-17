@@ -1,6 +1,7 @@
 import request from 'supertest';
 import { app } from '../../app';
 import { Ticket } from '../../models/Ticket';
+import { natsWrapper } from '../../nats-wraper';
 
 it('has a route handler to listen post request', async () => {
   const res = await request(app).post('/api/application').send({});
@@ -47,21 +48,35 @@ it('returns an error if an invalid price is provided', async () => {
     .send({ title: 'Opera' }) // request body
     .expect(400);
 });
-// it('creates a ticket', async () => {
-//   let tickets = await Ticket.find();
-//   expect(tickets.length).toEqual(0);
+it('creates a ticket', async () => {
+  let tickets = await Ticket.find({});
 
-//   await request(app)
-//     .post('api/application')
-//     .set('Cookie', global.signup())
-//     .send({
-//       title: 'Hello World!',
-//       price: 20,
-//     })
-//     .expect(201);
+  expect(tickets.length).toEqual(0);
 
-//   tickets = await Ticket.find();
-//   expect(tickets.length).toEqual(1);
-//   expect(tickets[0].price).toEqual(20);
-//   expect(tickets[0].title).toEqual('Hello World!');
-// }); // will be available when conected to MONGO
+  await request(app)
+    .post('/api/application')
+    .set('Cookie', global.signup())
+    .send({
+      title: 'Test',
+      price: 20,
+    })
+    .expect(201);
+
+  tickets = await Ticket.find({});
+  expect(tickets.length).toEqual(1);
+  expect(tickets[0].price).toEqual(20);
+  expect(tickets[0].title).toEqual('Test');
+}); // will be available when conected to MONGO
+
+it('publishes an event', async () => {
+  await request(app)
+    .post('/api/application')
+    .set('Cookie', global.signup())
+    .send({
+      title: 'Test',
+      price: 20,
+    })
+    .expect(201);
+
+  expect(natsWrapper.client.publish).toHaveBeenCalled();
+});
