@@ -11,7 +11,7 @@ export const authRequest = async (
     headers: {
       'Content-type': 'application/json',
     },
-    credentials: 'include',
+    // credentials: 'include',
   });
 
   const data = await response.json();

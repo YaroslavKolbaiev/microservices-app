@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: application-depl
+  name: orders-depl
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: application
+      app: orders
   template:
     metadata:
       labels:
-        app: application
+        app: orders
     spec:
       containers:
-        - name: application
-          image: irick05nazar/application
+        - name: orders
+          image: irick05nazar/orders
           env:
             - name: NATS_CLIENT_ID
               valueFrom:
@@ -38,12 +38,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: application-srv
+  name: orders-srv
 spec:
   selector:
-    app: application
+    app: orders
   ports:
-    - name: application
+    - name: orders
       protocol: TCP
       port: 3000
       targetPort: 3000

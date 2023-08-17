@@ -15,5 +15,5 @@ it('should return all availabele tickets', async () => {
 
   const res = await request(app).get('/api/application').send().expect(200);
 
-  expect(res.body.length()).toEqual(3);
+  expect(res.body.length).toEqual(3);
 });

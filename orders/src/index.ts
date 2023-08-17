@@ -36,7 +36,7 @@ const start = async () => {
   } catch (error) {
     console.log(error);
   }
-  app.listen(3003, () => {
+  app.listen(3000, () => {
     /** for cubernetes must be same port */
     console.log('Listening on port 3000');
   });

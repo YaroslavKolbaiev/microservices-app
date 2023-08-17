@@ -41,7 +41,8 @@ signInRouter.post(
     }; // kubernetes
 
     res
-      // .cookie('token', userJwt, { httpOnly: true }) // in course video was also added "withCredentials: true"
+      // with cookie parser in course video was also added "withCredentials: true"
+      // .cookie('token', userJwt, { httpOnly: true })
       .status(200)
       .send(existingUser);
   }

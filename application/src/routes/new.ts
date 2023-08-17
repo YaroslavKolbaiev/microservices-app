@@ -30,6 +30,7 @@ newTicketRoute.post(
       userId: ticket.userId,
     };
 
+    /** notify all services that ticket created */
     await new TicketCreatedPublisher(natsWrapper.client).publish(data);
 
     res.status(201).send(ticket);
