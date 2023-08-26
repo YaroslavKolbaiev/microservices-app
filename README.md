@@ -23,53 +23,6 @@
 
 - kubectl create secret generic jwt-secret --from-literal=[key-value]=[secret-value]
 
-##
-
-In the upcoming lecture, we will be adding the --only=prod flag to the npm install instruction of our Dockerfile. This flag no longer exists, and we need to use the --omit=dev flag instead.
-
-FROM node:alpine
-
-WORKDIR /app
-COPY package.json .
-RUN npm install --omit=dev
-COPY . .
-
-CMD ["npm", "start"]
-
-##
-
-In the upcoming lecture, we will be setting up our test environment with MongoMemoryServer. If you are using the latest versions of this library a few changes will be required:
-
-In auth/src/test/setup.ts, change these lines:
-
-mongo = new MongoMemoryServer();
-const mongoUri = await mongo.getUri();
-to this:
-
-const mongo = await MongoMemoryServer.create();
-const mongoUri = mongo.getUri();
-
-Remove the useNewUrlParser and useUnifiedTopology parameters from the connect method. Change this:
-
-await mongoose.connect(mongoUri, {
-useNewUrlParser: true,
-useUnifiedTopology: true,
-});
-to this:
-
-await mongoose.connect(mongoUri, {});
-
-Then, find the afterAll hook and add a conditional check:
-
-afterAll(async () => {
-if (mongo) {
-await mongo.stop();
-}
-await mongoose.connection.close();
-});
-
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.1/deploy/static/provider/cloud/deploy.yaml
-
 ## LECTURE 211
 
 In the upcoming lecture (and later with the ticketing, orders and payments services) you may end up seeing a TS error like this in your test/setup.ts file:
@@ -131,4 +84,4 @@ npm publish --access public
 
 npm update <pakage_name>
 
-## New Lecture
+## NATS

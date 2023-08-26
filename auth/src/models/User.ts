@@ -55,7 +55,7 @@ userSchema.pre('save', async function (done) {
   if (this.isModified('password')) {
     // above code means we want to hash password if it was modified
     // when user just newly created mongoose thinks it modified
-    // for ex. if only e-mail changed password not need to be hashed again
+    // for example if only e-mail changed password not need to be hashed again
     const hashed = await Password.toHash(this.get('password'));
     this.set('password', hashed);
   }

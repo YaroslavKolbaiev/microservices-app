@@ -4,7 +4,9 @@ import nats, { Stan } from 'node-nats-streaming';
  * Singleton class
  */
 class NatsWrapper {
-  /** question mark indicates that property _client may be undefined for some period */
+  /** difine client as Stan(nats client)
+   * question mark indicates that property _client may be undefined for some period
+   * */
   private _client?: Stan;
 
   constructor() {}
@@ -24,11 +26,12 @@ class NatsWrapper {
    * Promise is implemented in order to use method asynchronosly
    */
   connect(clusterId: string, clientID: string, url: string) {
-    /**  */
     this._client = nats.connect(clusterId, clientID, { url });
 
     return new Promise<void>((resolve, reject) => {
-      /** getter 'client' is used insted of property _client */
+      /** if _client is connected to nats and difined
+       * getter 'client' is used insted of property _client and resolves a promise
+       * */
       this.client.on('connect', () => {
         console.log('Connected to NATS');
       });

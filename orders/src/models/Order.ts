@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { OrderStatus } from '@irickmcrs/common';
-import { TicketDoc } from './Ticket';
+import { TicketDoc } from './Order-Ticket';
 
 /** in order to have one import statement for Order related  */
 export { OrderStatus };
