@@ -28,6 +28,7 @@ newTicketRoute.post(
       title: ticket.title,
       price: ticket.price,
       userId: ticket.userId,
+      version: ticket.version,
     };
 
     /** notify all services that ticket created */

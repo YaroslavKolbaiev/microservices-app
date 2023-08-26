@@ -47,6 +47,7 @@ updateRoute.put(
       title: ticket.title,
       price: ticket.price,
       userId: ticket.userId,
+      version: ticket.version,
     };
 
     /** there might be an issue if for some reason after ticket is updated and saved to DB

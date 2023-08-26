@@ -12,7 +12,7 @@ indexRouter.get(
     const orders = await Order.find({ userId: req.currentUser!.id }).populate(
       'ticket'
     );
-    /** to load ticket associated with order use mongoose 'pipulate' method */
+    /** to include ticket that the order is for, use mongoose 'populate' method */
 
     res.send(orders);
   }

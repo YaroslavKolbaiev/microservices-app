@@ -19,6 +19,7 @@ it('returs ticket if ticket is found', async () => {
 
   const ticketResponse = await request(app)
     .get(`/api/application/${res.body.id}`)
+    /** cookie is not set because ticket may see even not authenticated person */
     .send()
     .expect(200);
 

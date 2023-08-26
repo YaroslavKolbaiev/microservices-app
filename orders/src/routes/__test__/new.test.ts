@@ -1,9 +1,9 @@
 import request from 'supertest';
 import { app } from '../../app';
-import { Ticket } from '../../models/Ticket';
+import { Ticket } from '../../models/Order-Ticket';
 import mongoose from 'mongoose';
 import { Order, OrderStatus } from '../../models/Order';
-// import { natsWrapper } from '../../nats-wraper';
+import { natsWrapper } from '../../nats-wraper';
 
 it('has a route handler to listen post request', async () => {
   const res = await request(app).post('/api/orders');
@@ -86,4 +86,19 @@ it('reserves a ticket', async () => {
     .send({ ticketId: ticket.id })
     .expect(201);
 });
-it.todo('publish an event saying order is created');
+it('publish an event saying order is created', async () => {
+  const ticket = Ticket.build({
+    title: 'UFC300',
+    price: 100,
+  });
+  /** save ticket */
+  ticket.save();
+
+  await request(app)
+    .post('/api/orders')
+    .set('Cookie', global.signup())
+    .send({ ticketId: ticket.id })
+    .expect(201);
+
+  expect(natsWrapper.client.publish).toHaveBeenCalled();
+});
