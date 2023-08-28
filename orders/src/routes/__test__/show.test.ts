@@ -1,6 +1,7 @@
 import request from 'supertest';
 import { app } from '../../app';
 import { Ticket } from '../../models/Order-Ticket';
+import mongoose from 'mongoose';
 
 it('throws error if user is not owner of ticket', async () => {
   const owner = global.signup();
@@ -8,6 +9,7 @@ it('throws error if user is not owner of ticket', async () => {
   const ticket = Ticket.build({
     title: 'NBA Finals',
     price: 50,
+    id: new mongoose.Types.ObjectId().toHexString(),
   });
   ticket.save();
 
@@ -28,6 +30,7 @@ it('returns order if order is found', async () => {
   const ticket = Ticket.build({
     title: 'NBA Finals',
     price: 50,
+    id: new mongoose.Types.ObjectId().toHexString(),
   });
   ticket.save();
 

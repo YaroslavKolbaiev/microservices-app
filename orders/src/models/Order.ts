@@ -19,6 +19,7 @@ interface OrderDoc extends mongoose.Document {
   expiresAt: Date;
   /** ticket document is assigned as value of order */
   ticket: TicketDoc;
+  version: number;
 }
 
 interface OrderModel extends mongoose.Model<OrderDoc> {
@@ -49,10 +50,12 @@ const orderSchema = new mongoose.Schema(
       /** to use properties of other collections */
       type: mongoose.Schema.Types.ObjectId,
       /** reference to Ticket document */
-      ref: 'Ticket',
+      ref: 'Order-Ticket',
     },
   },
   {
+    versionKey: 'version',
+    optimisticConcurrency: true,
     toJSON: {
       transform(doc, ret) {
         ret.id = ret._id;

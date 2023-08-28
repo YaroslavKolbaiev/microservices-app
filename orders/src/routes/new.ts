@@ -66,7 +66,7 @@ newRouter.post(
 
     const data = {
       id: order.id,
-      version: order.__v,
+      version: order.version,
       status: order.status,
       userId: order.userId,
       expiresAt: order.expiresAt.toISOString(),

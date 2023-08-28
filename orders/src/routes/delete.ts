@@ -28,7 +28,8 @@ deleteRouter.delete(
     /** pubslish event saying this order cancelled */
     new OrderCancelledPublisher(natsWrapper.client).publish({
       id: order.id,
-      version: order.__v,
+      version: order.version,
+      // version: order.__v, *** why i make __v ? ***
       ticket: {
         /** in order to have reference to ticket from order
          * when fetching order, we have to 'populate('ticket')'
