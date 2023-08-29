@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import { Ticket } from '../models/Ticket';
 import {
+  BadRequest,
   NotAuthorized,
   NotFoundError,
   requireAuth,
@@ -30,6 +31,10 @@ updateRoute.put(
 
     if (!ticket) {
       throw new NotFoundError();
+    }
+
+    if (ticket.orderId) {
+      throw new BadRequest('Ticket is reserved');
     }
 
     if (ticket.userId !== req.currentUser?.id) {

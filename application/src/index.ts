@@ -2,6 +2,8 @@
 import mongoose from 'mongoose';
 import { app } from './app';
 import { natsWrapper } from './nats-wraper';
+import { OrderCreatedListener } from './events/listeners/order-created-listener';
+import { orderCancelledListener } from './events/listeners/order-cancelled-listener';
 
 const start = async () => {
   // check if MONGO_URL and JWT exists in env before running code.
@@ -36,6 +38,10 @@ const start = async () => {
   } catch (error) {
     console.log(error);
   }
+
+  new OrderCreatedListener(natsWrapper.client).listen();
+  new orderCancelledListener(natsWrapper.client).listen();
+
   app.listen(3003, () => {
     /** for cubernetes must be same port */
     console.log('Listening on port 3000');

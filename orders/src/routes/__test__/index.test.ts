@@ -1,11 +1,13 @@
 import request from 'supertest';
 import { app } from '../../app';
 import { Ticket } from '../../models/Order-Ticket';
+import mongoose from 'mongoose';
 
 const buildTicket = () => {
   const ticket = Ticket.build({
     title: 'UFC340',
     price: 50,
+    id: new mongoose.Types.ObjectId().toHexString(),
   });
   /** save ticket */
   return ticket.save();
