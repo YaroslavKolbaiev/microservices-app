@@ -27,7 +27,7 @@ app.use(
   })
 );
 
-// app.use(currentUser);
+app.use(currentUser);
 app.use(createChargeRouter);
 
 // if user sends request to not existing route
