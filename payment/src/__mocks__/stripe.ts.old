@@ -1,0 +1,7 @@
+//create a function that immitates 'stripe.charges.create()'
+
+export const stripe = {
+  charges: {
+    create: jest.fn().mockResolvedValue({}),
+  },
+};
