@@ -4,6 +4,8 @@ import { app } from './app';
 import { natsWrapper } from './nats-wraper';
 import { TicketCreatedListener } from './events/listeners/ticket-creatd-listener';
 import { TicketUpdatedListener } from './events/listeners/ticket-updated-listener';
+import { ExpirationCompleteListener } from './events/listeners/expiration-complete-listener';
+import { PaymentCreatedListener } from './events/listeners/payment-created-listener';
 
 const start = async () => {
   // check if MONGO_URL and JWT exists in env before running code.
@@ -45,6 +47,8 @@ const start = async () => {
 
   new TicketCreatedListener(natsWrapper.client).listen();
   new TicketUpdatedListener(natsWrapper.client).listen();
+  new ExpirationCompleteListener(natsWrapper.client).listen();
+  new PaymentCreatedListener(natsWrapper.client).listen();
 
   app.listen(3000, () => {
     /** for cubernetes must be same port */

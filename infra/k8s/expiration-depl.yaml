@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: expiration-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: expiration
+  template:
+    metadata:
+      labels:
+        app: expiration
+    spec:
+      containers:
+        - name: expiration
+          image: irick05nazar/expiration
+          env:
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name # for each client the POD ID will be used
+            - name: NATS_URL
+              value: 'http://localhost:4222'
+            - name: NATS_CLUSTER_ID
+              value: microservices
+            - name: REDIS_HOST
+              value: expiration-redis-srv

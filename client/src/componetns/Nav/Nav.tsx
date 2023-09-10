@@ -1,6 +1,5 @@
 'use client';
 import Link from 'next/link';
-import NavLinks from './NavLinks';
 import { CurrentUser } from '@/types/User';
 
 const Nav = ({ currentUser }: { currentUser: CurrentUser }) => {
@@ -40,7 +39,19 @@ const Nav = ({ currentUser }: { currentUser: CurrentUser }) => {
           </Link>
         </div>
       ) : (
-        <NavLinks />
+        <Link className="float-right h-full flex items-center" href="/sign-in">
+          <span
+            className="text-white
+            text-lg
+            cursor-pointer
+            hover:underline
+            transition
+            duration-200
+          "
+          >
+            Login
+          </span>
+        </Link>
       )}
     </nav>
   );

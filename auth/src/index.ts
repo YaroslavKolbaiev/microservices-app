@@ -1,6 +1,9 @@
-// import 'dotenv/config'; // you dont need this lib if you use docker
+import 'dotenv/config'; // you dont need this lib if you use docker
 import mongoose from 'mongoose';
 import { app } from './app';
+
+// when using localy
+const PORT = 3000;
 
 const start = async () => {
   // check if JWT_KEY exists in env before running code.
@@ -16,9 +19,9 @@ const start = async () => {
   } catch (error) {
     console.log(error);
   }
-  app.listen(3000, () => {
+  app.listen(PORT, () => {
     /** for cubernetes must be same port */
-    console.log('Listening on port 3000');
+    console.log('Listening on port:', PORT);
   });
 };
 start();
