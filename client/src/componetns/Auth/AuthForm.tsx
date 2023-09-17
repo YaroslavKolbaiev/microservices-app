@@ -1,49 +1,49 @@
 'use client';
 
-import { authRequest } from '@/services/authRequest';
 import { toastOptions } from '@/utils/toastOptions';
 import { usePathname, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { AuthButton, AuthInput, AuthLink, TermsAndConditions } from '..';
+import useRequest from '@/hooks/use-request';
 
 const AuthForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
   const path = usePathname()?.slice(1);
   const router = useRouter();
   const isSignUpPage = path === 'sign-up';
   const isSignInPage = path === 'sign-in';
+  // IMPORTANT !!! FOR AUTHORIZATION REQUEST MUST BE SENT FROM CLIENT
+  // IN ORDER TO SET COOKIES.
+  // ****** CHANGE PATH TO JUST /api/users/${path} WHIT KUBERNETES
+  const { doRequest, isLoading } = useRequest({
+    url: `http://localhost:3000/api/users/${path}`,
+    method: 'POST',
+    body: {
+      email,
+      password,
+    },
+    onSuccess: (data) => console.log(data),
+  });
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setIsLoading(true);
+
     if (isSignUpPage && password !== passwordConfirm) {
       toast.error('password and confirm password must be equal.', toastOptions);
-      setIsLoading(false);
       return;
     }
-    try {
-      const res = await authRequest(
-        // change path when use kubernetes to just "/api/users/${path}"
-        // it is possible when request is sent from browser(means client)
-        `/api/users/${path}`,
-        'POST',
-        email,
-        password
-      );
+
+    const res = await doRequest();
+
+    if (res) {
       router.push('/');
-      setIsLoading(false);
-    } catch (errors: any) {
-      for (const index in errors) {
-        toast.error(errors[index].message, toastOptions);
-      }
-      setIsLoading(false);
     }
   };
+
   return (
     <>
       <div

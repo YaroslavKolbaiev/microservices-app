@@ -1,9 +1,11 @@
-// import 'dotenv/config'; // you dont need this lib if you use docker
+import 'dotenv/config'; // you dont need this lib if you use docker
 import mongoose from 'mongoose';
 import { app } from './app';
 import { natsWrapper } from './nats-wraper';
 import { OrderCreatedListener } from './events/listeners/order-created-listener';
 import { orderCancelledListener } from './events/listeners/order-cancelled-listener';
+
+const PORT = 3002;
 
 const start = async () => {
   // check if MONGO_URL and JWT exists in env before running code.
@@ -39,12 +41,12 @@ const start = async () => {
     console.log(error);
   }
 
-  new OrderCreatedListener(natsWrapper.client).listen();
-  new orderCancelledListener(natsWrapper.client).listen();
+  // new OrderCreatedListener(natsWrapper.client).listen();
+  // new orderCancelledListener(natsWrapper.client).listen();
 
-  app.listen(3003, () => {
+  app.listen(PORT, () => {
     /** for cubernetes must be same port */
-    console.log('Listening on port 3000');
+    console.log('Listening on port:', PORT);
   });
 };
 start();

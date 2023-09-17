@@ -36,13 +36,13 @@ signInRouter.post(
       existingUser.email
     );
 
-    req.session = {
-      jwt: userJwt,
-    }; // kubernetes
+    // req.session = {
+    //   jwt: userJwt,
+    // }; // kubernetes
 
+    // with cookie parser in course video was also added "withCredentials: true"
     res
-      // with cookie parser in course video was also added "withCredentials: true"
-      // .cookie('token', userJwt, { httpOnly: true })
+      .cookie('token', userJwt, { httpOnly: true }) // with local networking(only this line)
       .status(200)
       .send(existingUser);
   }

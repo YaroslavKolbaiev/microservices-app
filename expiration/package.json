@@ -18,7 +18,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@irickmcrs/common": "^1.0.16",
+    "@irickmcrs/common": "^1.0.17",
     "bullmq": "^4.8.0",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",

@@ -11,7 +11,8 @@ export default function SignOut() {
       const res = await authRequest(
         // change path when use kubernetes to just "/api/users/${path}"
         // it is possible when request is sent from browser(means client)
-        `/api/users/sign-out`,
+        // `/api/users/sign-out`,
+        'http://localhost:3000/api/users/sign-out',
         'POST'
       );
       router.push('/');

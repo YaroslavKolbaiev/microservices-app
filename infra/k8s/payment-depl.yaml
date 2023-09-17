@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payment
+  template:
+    metadata:
+      labels:
+        app: payment
+    spec:
+      containers:
+        - name: payment
+          image: irick05nazar/payment
+          env:
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name # for each client the POD ID will be used
+            - name: NATS_URL
+              value: 'http://localhost:4222'
+            - name: NATS_CLUSTER_ID
+              value: microservices
+            - name: mongoUrl
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-url # name of secret from kubectl
+                  key: mongoUrl # key set in kubectl
+            - name: JWT_KEY # key set in kubectl
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret # name of secret from kubectl
+                  key: JWT_KEY # key set in kubectl
+            - name: STRIPE_KEY # key set in kubectl
+              valueFrom:
+                secretKeyRef:
+                  name: stripe-secret # name of secret from kubectl
+                  key: STRIPE_KEY # key set in kubectl
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: payment-srv
+spec:
+  selector:
+    app: payment
+  ports:
+    - name: payment
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
