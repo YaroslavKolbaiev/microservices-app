@@ -18,12 +18,13 @@ export class ExpirationCompleteListener extends Listener<ExpirationCompleteEvent
 
   async onMessage(data: ExpirationCompleteEvent['data'], msg: Message) {
     // on receiving msg from exporation publisher find order by ID
-    const order = await Order.findById(data.orderId);
+    const order = await Order.findById(data.orderId).populate('ticket');
 
     if (!order) {
       throw new NotFoundError();
     }
 
+    // if order was already completed just return
     if (order.status === OrderStatus.COMPLETE) {
       return msg.ack();
     }
@@ -39,7 +40,6 @@ export class ExpirationCompleteListener extends Listener<ExpirationCompleteEvent
     new OrderCancelledPublisher(this.client).publish({
       id: order.id,
       version: order.version,
-      // **************** POPULATE ORDER WITH TICKET *********************
       ticket: {
         id: order.ticket.id,
       },

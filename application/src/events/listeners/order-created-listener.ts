@@ -28,6 +28,8 @@ export class OrderCreatedListener extends Listener<OrderCreatedEvent> {
 
     await ticketToReserve.save();
 
+    console.log('[ticketVersion in app]', ticketToReserve.version);
+
     await new TicketUpdatedPublisher(this.client).publish({
       id: ticketToReserve.id,
       version: ticketToReserve.version,

@@ -1,9 +1,10 @@
+import { TicketsBoard } from '@/componetns';
 import { CurrentUser } from '@/types/User';
 
-export default function Home({ currentUser }: { currentUser: CurrentUser }) {
-  return currentUser ? (
-    <div className="">Hello {currentUser.email}</div>
-  ) : (
-    <h1>Please proceed to Login page</h1>
+export default function Home() {
+  return (
+    <div className="max-w-7xl px-5 mx-auto">
+      <TicketsBoard />
+    </div>
   );
 }

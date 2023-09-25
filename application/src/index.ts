@@ -41,8 +41,8 @@ const start = async () => {
     console.log(error);
   }
 
-  // new OrderCreatedListener(natsWrapper.client).listen();
-  // new orderCancelledListener(natsWrapper.client).listen();
+  new OrderCreatedListener(natsWrapper.client).listen();
+  new orderCancelledListener(natsWrapper.client).listen();
 
   app.listen(PORT, () => {
     /** for cubernetes must be same port */

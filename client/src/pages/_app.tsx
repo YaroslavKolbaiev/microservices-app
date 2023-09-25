@@ -60,6 +60,5 @@ MyApp.getInitialProps = async (
   // <=
 
   const { currentUser } = await res.json();
-
   return { ...ctx, props: { currentUser } };
 };

@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server';
 
 // This function can be marked `async` if using `await` inside
 export function middleware(request: NextRequest) {
-  const hasCookie = request.headers.get('cookie');
+  const hasCookie = request.cookies.get('token')?.value;
 
   if (hasCookie) {
     const redireHome = new URL('/', request.url);

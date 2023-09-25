@@ -24,6 +24,9 @@ currentUserRouter.get(
     }
     try {
       const payload = jwtHelper.validateAccessToken(tokken);
+      if (!payload) {
+        res.cookie('token', null);
+      }
       res.send({ currentUser: payload });
     } catch (error) {
       return res.send({ currentUser: null });

@@ -1,5 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
+// IMPORTANT !!! FOR AUTHORIZATION REQUEST MUST BE SENT FROM CLIENT
+// IN ORDER TO SET COOKIES.
+// this implementation wont work
+
 export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse

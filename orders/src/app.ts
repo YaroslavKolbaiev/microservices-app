@@ -9,6 +9,7 @@ import { indexRouter } from './routes';
 import { showRouter } from './routes/show';
 import { newRouter } from './routes/new';
 import { deleteRouter } from './routes/delete';
+import { authMiddleware } from './middleware_test/current-user';
 
 const app = express();
 
@@ -30,7 +31,8 @@ app.use(
   })
 );
 
-app.use(currentUser);
+// app.use(currentUser); // for kubernetes
+app.use(authMiddleware); // for local implementaion
 app.use(indexRouter);
 app.use(showRouter);
 app.use(newRouter);

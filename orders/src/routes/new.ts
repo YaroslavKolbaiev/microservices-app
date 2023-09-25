@@ -51,8 +51,8 @@ newRouter.post(
 
     /** calculate exparation date of order */
     const expiration = new Date();
-    /** set expiration period equals to 15min */
-    expiration.setSeconds(expiration.getSeconds() + 15 * 60);
+    /** set expiration period equals to 1min */
+    expiration.setSeconds(expiration.getSeconds() + 1 * 60);
 
     /** build the order and save to DB */
     const order = Order.build({

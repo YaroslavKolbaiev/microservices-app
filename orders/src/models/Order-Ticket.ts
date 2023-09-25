@@ -13,6 +13,7 @@ interface TicketAttrs {
    * must be assigned as _id proveperty of new Ticket in ORDER DB
    */
   id: string;
+  version: number;
 }
 
 export interface TicketDoc extends mongoose.Document {

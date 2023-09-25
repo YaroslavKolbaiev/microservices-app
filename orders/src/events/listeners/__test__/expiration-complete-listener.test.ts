@@ -32,15 +32,18 @@ const setup = async () => {
     ack: jest.fn(),
   };
 
-  return { listener, data, msg, order };
+  return { listener, data, msg, order, ticket };
 };
 
 it('sets order status to cancelled', async () => {
-  const { listener, data, msg } = await setup();
+  const { listener, data, msg, ticket } = await setup();
 
   await listener.onMessage(data, msg);
 
-  const order = await Order.findById(data.orderId);
+  const order = await Order.findById(data.orderId).populate('ticket');
+
+  console.log('[ORDER]', order?.ticket);
+  console.log('[TICKET]', ticket);
 
   expect(order?.status).toEqual(OrderStatus.CANCELLED);
 });
@@ -63,6 +66,18 @@ it('emit an OrderCancelled event', async () => {
   );
 
   expect(eventData.id).toEqual(order.id);
+});
+
+it('emit an OrderCancelled event with ticket property', async () => {
+  const { listener, data, msg, order } = await setup();
+
+  await listener.onMessage(data, msg);
+
+  const eventData = JSON.parse(
+    (natsWrapper.client.publish as jest.Mock).mock.calls[0][1]
+  );
+
+  expect(eventData.ticket.id).toEqual(order.ticket.id);
 });
 
 it('throws not found if order not exists', async () => {

@@ -19,7 +19,7 @@ export class TicketUpdatedListener extends Listener<TicketUpdatedEvent> {
     const ticket = await Ticket.findByIdAndVersion(data);
 
     if (!ticket) {
-      throw new NotFoundError();
+      throw new Error('ticket not found');
     }
 
     ticket.set({

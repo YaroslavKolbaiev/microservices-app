@@ -13,12 +13,7 @@ export class TicketCreatedListener extends Listener<TicketCreatedEvent> {
    * when message from nats server is received
    */
   async onMessage(data: TicketCreatedEvent['data'], msg: Message) {
-    const {
-      id,
-      title,
-      price,
-      // version
-    } = data;
+    const { id, title, price, version } = data;
 
     /** to have same ID as TICKET DB, id property from data must be passed
      * to build method of TICKET model of ORDERS DB
@@ -29,7 +24,7 @@ export class TicketCreatedListener extends Listener<TicketCreatedEvent> {
       id,
       /** actually no need to assign version because it is set to 0
        * when it has been created */
-      // version
+      version,
     });
 
     await ticket.save();

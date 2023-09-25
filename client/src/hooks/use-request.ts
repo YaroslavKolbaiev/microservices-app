@@ -7,7 +7,7 @@ interface DoRequest {
   url: string;
   method: string;
   body: any;
-  onSuccess: (data: any) => void;
+  onSuccess?: (data: any) => void;
 }
 
 export default ({ url, method, body, onSuccess }: DoRequest) => {
@@ -27,7 +27,7 @@ export default ({ url, method, body, onSuccess }: DoRequest) => {
 
     const data = await response.json();
 
-    if (onSuccess) {
+    if (onSuccess && response.ok) {
       onSuccess(data);
     }
 
@@ -40,7 +40,7 @@ export default ({ url, method, body, onSuccess }: DoRequest) => {
     }
     setIsLoading(false);
 
-    return { data };
+    return { data, response };
   };
 
   return { doRequest, isLoading };
