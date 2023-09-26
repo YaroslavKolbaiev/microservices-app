@@ -14,7 +14,7 @@ export const authMiddleware = (
   next: NextFunction
 ) => {
   // IMPLEMENTATION WITH COOKIE PARSER
-  const tokken = req.headers.cookie?.split('=')[1];
+  const tokken = req.headers.cookie;
   if (!tokken) {
     return next();
   }

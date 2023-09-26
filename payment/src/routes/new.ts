@@ -19,10 +19,12 @@ const router = express.Router();
 router.post(
   '/api/payment/',
   requireAuth,
-  [body('token').not().isEmpty(), body('orderId').not().isEmpty()],
+  // [body('token').not().isEmpty(), body('orderId').not().isEmpty()],
+  [body('orderId').not().isEmpty()],
   validateRequest,
   async (req: Request, res: Response) => {
-    const { token, orderId } = req.body;
+    // const { token, orderId } = req.body;
+    const { orderId } = req.body;
 
     const order = await Order.findById(orderId);
 
@@ -38,27 +40,33 @@ router.post(
       throw new BadRequest('Order is cancelled');
     }
 
-    const charge = await stripe.charges.create({
+    const charge = await stripe.paymentIntents.create({
       // multiply by 100 to convert to cents
       amount: order.price * 100,
       currency: 'usd',
-      source: token,
+      // source: token,
       description: `Test payment for ${order.id}`,
+      automatic_payment_methods: {
+        enabled: true,
+      },
     });
 
-    const payment = Payment.build({
-      orderId,
-      stripeId: charge.id,
-    });
-    await payment.save();
+    // MAYBE PAYMENT MUST BE IN OTHER REQUEST
 
-    new PaymentCreatedPublidher(natsWrapper.client).publish({
-      id: payment.id,
-      orderId: payment.orderId,
-      stripeId: payment.stripeId,
-    });
+    // const payment = Payment.build({
+    //   orderId,
+    //   stripeId: charge.id,
+    // });
+    // await payment.save();
 
-    res.status(201).send({ id: payment.id });
+    // new PaymentCreatedPublidher(natsWrapper.client).publish({
+    //   id: payment.id,
+    //   orderId: payment.orderId,
+    //   stripeId: payment.stripeId,
+    // });
+
+    // res.status(201).send({ id: payment.id });
+    res.status(201).send({ clientSecret: charge.client_secret });
   }
 );
 

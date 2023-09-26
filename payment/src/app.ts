@@ -6,6 +6,7 @@ import cookieSession from 'cookie-session'; // library for handling cookies
 import cors from 'cors'; // no needed if kubernetes is used
 import { currentUser, errorMiddleware, NotFoundError } from '@irickmcrs/common';
 import { createChargeRouter } from './routes/new';
+import { authMiddleware } from './middleware_test/current-user';
 
 const app = express();
 
@@ -27,7 +28,8 @@ app.use(
   })
 );
 
-app.use(currentUser);
+// app.use(currentUser);
+app.use(authMiddleware); // for local implementaion
 app.use(createChargeRouter);
 
 // if user sends request to not existing route

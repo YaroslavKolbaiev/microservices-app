@@ -2,19 +2,15 @@
 import { Order } from '@/types/Order';
 import { ToastContainer } from 'react-toastify';
 import { useEffect, useState, useMemo } from 'react';
-import StripeCheckout from 'react-stripe-checkout';
+// import StripeCheckout from 'react-stripe-checkout';
+import 'react-stripe-js/dist/style.css';
 import { CurrentUser } from '@/types/User';
 import Link from 'next/link';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import { PayButtonComp } from './PayButton';
 
-const OrderCard = ({
-  order,
-  currentUser,
-}: {
-  order: Order;
-  currentUser: CurrentUser;
-}) => {
+const OrderCard = ({ order }: { order: Order }) => {
   const [minLeft, setMinLeft] = useState<number>(0);
   const [secLeft, setSecLeft] = useState<number>(0);
 
@@ -65,8 +61,9 @@ const OrderCard = ({
 
   return (
     <>
-      <div
-        className="p-12
+      <div className="flex flex-col justify-center items-center gap-6">
+        <div
+          className="p-12
           flex 
           items-center 
           flex-col
@@ -78,29 +75,31 @@ const OrderCard = ({
           dark:border-stone-700
           dark:shadow-slate-700
         "
-      >
-        <h2 className="text-slate-600 text-4xl dark:text-slate-300">
-          {order.ticket.title}
-        </h2>
-        <CircularProgressbar
-          className="my-6"
-          value={secLeft}
-          maxValue={totalSec / 1000}
-          text={timeRemaining()}
-          counterClockwise
-          styles={{
-            text: {
-              fill: 'gray',
-            },
-          }}
-        />
-        <StripeCheckout
+        >
+          <h2 className="text-slate-600 text-4xl dark:text-slate-300">
+            {order.ticket.title}
+          </h2>
+          <CircularProgressbar
+            className="my-6"
+            value={secLeft}
+            maxValue={totalSec / 1000}
+            text={timeRemaining()}
+            counterClockwise
+            styles={{
+              text: {
+                fill: 'gray',
+              },
+            }}
+          />
+          {/* <StripeCheckout
           token={(token) => console.log(token)}
           stripeKey="pk_test_51NmwxdHLElqdJu8lqqrbsoikjEW4L32m3oQEFDVMNmeHFcERbkycP2ueLZ9qfreEX3jrfh7AZSoKJKP9tZOKaRbr00a6tT5sBo"
           // to convert cents to USD
           amount={+order.ticket.price * 100}
           email={currentUser.email}
-        />
+        /> */}
+        </div>
+        <PayButtonComp orderId={order.id} />
       </div>
       <ToastContainer />
     </>

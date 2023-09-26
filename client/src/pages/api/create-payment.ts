@@ -4,12 +4,12 @@ export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
-  const { title, price } = request.body;
+  const { orderId } = request.body;
 
   // change to /api/application/ with kubernetes
-  const res = await fetch('http://localhost:3002/api/application/', {
+  const res = await fetch('http://localhost:3005/api/payment/', {
     method: 'POST',
-    body: JSON.stringify({ title, price }),
+    body: JSON.stringify({ orderId }),
     headers: {
       'Content-type': 'application/json',
       cookie: `${request.cookies.token}`,
@@ -18,6 +18,8 @@ export default async function handler(
   });
 
   const data = await res.json();
+
+  console.log('[DATA IN API]', data);
 
   if (!res.ok) {
     return response.status(500).send(data);

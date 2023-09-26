@@ -12,7 +12,7 @@ export default async function handler(
     body: JSON.stringify({ ticketId }),
     headers: {
       'Content-type': 'application/json',
-      cookie: `${request.headers.cookie}`,
+      cookie: `${request.cookies.token}`,
     },
     credentials: 'include', // include credentials for local networking. WHY I REMOVED IT FOR KUBERNETES ???
   });

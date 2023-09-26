@@ -5,6 +5,8 @@ import { natsWrapper } from './nats-wraper';
 import { OrderCreatedListener } from './events/listeners/order-created-listener';
 import { OrderCancelledListener } from './events/listeners/order-cancelled-listener';
 
+const PORT = 3005;
+
 const start = async () => {
   // check if MONGO_URL and JWT exists in env before running code.
   if (!process.env.JWT_KEY) {
@@ -42,9 +44,9 @@ const start = async () => {
   new OrderCreatedListener(natsWrapper.client).listen();
   new OrderCancelledListener(natsWrapper.client).listen();
 
-  app.listen(3005, () => {
+  app.listen(PORT, () => {
     /** for cubernetes must be same port */
-    console.log('Listening on port 3005');
+    console.log('Listening on port ', PORT);
   });
 };
 start();

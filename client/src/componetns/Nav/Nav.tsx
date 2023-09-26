@@ -22,6 +22,22 @@ const Nav = ({ currentUser }: { currentUser: CurrentUser }) => {
       </div>
       {currentUser ? (
         <div className="float-right flex h-full items-center gap-4">
+          <Link
+            className="float-right h-full flex items-center"
+            href="/tickets/new"
+          >
+            <span
+              className="text-white
+            text-lg
+            cursor-pointer
+            hover:underline
+            transition
+            duration-200
+          "
+            >
+              Create Ticket
+            </span>
+          </Link>
           <span className="text-white">Welcome {currentUser.email}</span>
           <Link
             href="/sign-out"
