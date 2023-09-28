@@ -4,16 +4,15 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 interface DoRequest {
-  url: string;
   method: string;
   body: any;
   onSuccess?: (data: any) => void;
 }
 
-export default ({ url, method, body, onSuccess }: DoRequest) => {
+export default ({ method, body, onSuccess }: DoRequest) => {
   const [isLoading, setIsLoading] = useState(false);
 
-  const doRequest = async () => {
+  const doRequest = async (url: string) => {
     setIsLoading(true);
     const response = await fetch(url, {
       method,

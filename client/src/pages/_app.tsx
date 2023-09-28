@@ -3,6 +3,7 @@ import App, { AppContext, AppInitialProps, AppProps } from 'next/app';
 import Head from 'next/head';
 import { Nav } from '@/componetns';
 import { CurrentUser } from '@/types/User';
+import { ProgressProvider } from '@/Context/UserContext';
 
 type AppOwnProps = { props: { currentUser: CurrentUser } };
 
@@ -12,14 +13,14 @@ export default function MyApp({
   props,
 }: AppProps & AppOwnProps) {
   return (
-    <>
+    <ProgressProvider>
       <Head>
         <title>Microservices</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Nav currentUser={props.currentUser} />
       <Component {...pageProps} currentUser={props.currentUser} />
-    </>
+    </ProgressProvider>
   );
 }
 

@@ -20,7 +20,7 @@ const AuthForm = () => {
   // IN ORDER TO SET COOKIES.
   // ****** CHANGE PATH TO JUST /api/users/${path} WHIT KUBERNETES
   const { doRequest, isLoading } = useRequest({
-    url: `http://localhost:3000/api/users/${path}`,
+    // url: `http://localhost:3000/api/users/${path}`,
     method: 'POST',
     body: {
       email,
@@ -37,7 +37,7 @@ const AuthForm = () => {
       return;
     }
 
-    const res = await doRequest();
+    const res = await doRequest(`http://localhost:3000/api/users/${path}`);
 
     if (res) {
       router.push('/');

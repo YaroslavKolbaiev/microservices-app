@@ -13,6 +13,7 @@ import { PayButtonComp } from './PayButton';
 const OrderCard = ({ order }: { order: Order }) => {
   const [minLeft, setMinLeft] = useState<number>(0);
   const [secLeft, setSecLeft] = useState<number>(0);
+  const [orderPayed, setOrderPayed] = useState(false);
 
   const totalSec = useMemo(() => {
     return +new Date(order.expiresAt) - +new Date();
@@ -51,8 +52,10 @@ const OrderCard = ({ order }: { order: Order }) => {
   if (secLeft < 0) {
     return (
       <div>
-        <p className="text-red-500 text-center">Order has expired</p>
-        <Link className="text-sky-400" href="/">
+        <p className="text-2xl font-semibold text-red-500 text-center mb-4">
+          Order has expired
+        </p>
+        <Link className="text-lg text-sky-400 active:text-sky-100" href="/">
           Go Back To Main Page
         </Link>
       </div>
@@ -64,21 +67,22 @@ const OrderCard = ({ order }: { order: Order }) => {
       <div className="flex flex-col justify-center items-center gap-6">
         <div
           className="p-12
-          flex 
-          items-center 
-          flex-col
-          border-stone-300
-          border
-          rounded-lg
-          shadow-lg 
-          min-w-[290px]
-          dark:border-stone-700
-          dark:shadow-slate-700
-        "
+            flex 
+            items-center 
+            flex-col
+            border-stone-300
+            border
+            rounded-lg
+            shadow-lg 
+            min-w-[290px]
+            dark:border-stone-700
+            dark:shadow-slate-700
+          "
         >
           <h2 className="text-slate-600 text-4xl dark:text-slate-300">
             {order.ticket.title}
           </h2>
+
           <CircularProgressbar
             className="my-6"
             value={secLeft}
@@ -91,15 +95,9 @@ const OrderCard = ({ order }: { order: Order }) => {
               },
             }}
           />
-          {/* <StripeCheckout
-          token={(token) => console.log(token)}
-          stripeKey="pk_test_51NmwxdHLElqdJu8lqqrbsoikjEW4L32m3oQEFDVMNmeHFcERbkycP2ueLZ9qfreEX3jrfh7AZSoKJKP9tZOKaRbr00a6tT5sBo"
-          // to convert cents to USD
-          amount={+order.ticket.price * 100}
-          email={currentUser.email}
-        /> */}
         </div>
-        <PayButtonComp orderId={order.id} />
+
+        <PayButtonComp orderId={order.id} setSecLeft={setSecLeft} />
       </div>
       <ToastContainer />
     </>

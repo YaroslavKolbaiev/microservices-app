@@ -9,7 +9,7 @@ const ShowTicket = ({ data }: { data: Ticket }) => {
   );
 };
 
-export const getStaticProps = async (context: any) => {
+export const getServerSideProps = async (context: any) => {
   const { ticket } = context.params;
 
   const res = await fetch(`http://localhost:3002/api/application/${ticket}`, {
@@ -24,18 +24,19 @@ export const getStaticProps = async (context: any) => {
   return { props: { data } };
 };
 
-export const getStaticPaths = async () => {
-  const res = await fetch('http://localhost:3002/api/application/');
-  const data: Ticket[] = await res.json();
+// ******** SHELL I USE STATICPROPS FOR THIS ROUTE ??? *****************
+// export const getStaticPaths = async () => {
+//   const res = await fetch('http://localhost:3002/api/application/');
+//   const data: Ticket[] = await res.json();
 
-  // Get the paths we want to pre-render based on posts
-  const paths = data.map((ticket) => ({
-    params: { ticket: ticket.id },
-  }));
-  return {
-    paths,
-    fallback: true, // false or "blocking"
-  };
-};
+//   // Get the paths we want to pre-render based on posts
+//   const paths = data.map((ticket) => ({
+//     params: { ticket: ticket.id },
+//   }));
+//   return {
+//     paths,
+//     fallback: true, // false or "blocking"
+//   };
+// };
 
 export default ShowTicket;

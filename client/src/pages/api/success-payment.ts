@@ -4,12 +4,12 @@ export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
-  const { orderId } = request.body;
+  const { orderId, stripeId } = request.body;
 
   // change to /api/application/ with kubernetes
-  const res = await fetch('http://localhost:3005/api/payment/', {
+  const res = await fetch('http://localhost:3005/api/success/', {
     method: 'POST',
-    body: JSON.stringify({ orderId }),
+    body: JSON.stringify({ orderId, stripeId }),
     headers: {
       'Content-type': 'application/json',
       cookie: `${request.cookies.token}`,

@@ -1,44 +1,60 @@
 'use client';
 import useRequest from '@/hooks/use-request';
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { PayNow, loadStripe } from 'react-stripe-js';
 
-export const PayButtonComp = ({ orderId }: { orderId: string }) => {
+interface StripeRes {
+  clientSecret: string;
+  id: string;
+}
+
+interface Props {
+  orderId: string;
+  setSecLeft: (value: number) => void;
+}
+
+export const PayButtonComp = ({ orderId, setSecLeft }: Props) => {
+  const router = useRouter();
+
   const stripe = loadStripe(
     'pk_test_51NmwxdHLElqdJu8lqqrbsoikjEW4L32m3oQEFDVMNmeHFcERbkycP2ueLZ9qfreEX3jrfh7AZSoKJKP9tZOKaRbr00a6tT5sBo'
   );
 
-  const [clientSecret, setClientSecret] = useState<string>('');
-
-  const { doRequest, isLoading } = useRequest({
-    url: '/api/create-payment',
-    method: 'POST',
-    body: { orderId },
-    onSuccess: (data) => setClientSecret(data.clientSecret),
+  const [charge, setCharge] = useState<{ clientSecret: string; id: string }>({
+    clientSecret: '',
+    id: '',
   });
 
-  // const createPaymentIntent = () => {
-  //   if (!clientSecret) {
-  //     fetch('http://localhost:3005/api/payment', {
-  //       method: 'POST',
-  //       headers: { 'Content-Type': 'application/json' },
-  //       body: JSON.stringify({ orderId }),
-  //     })
-  //       .then((res) => res.json())
-  //       .then((data) => setClientSecret(data.clientSecret));
-  //   }
-  // };
+  const { doRequest, isLoading } = useRequest({
+    // url: '/api/create-payment',
+    method: 'POST',
+    body: { orderId, stripeId: charge.id },
+    onSuccess: (data: StripeRes) => {
+      if (!data.clientSecret) {
+        console.log('No Client Secret ...');
+        return;
+      }
+
+      setCharge(data);
+    },
+  });
 
   return (
     <>
       <PayNow
         title={isLoading ? 'Loading...' : 'Click To Pay'}
-        successMessage="payment done,creating order please wait...."
+        successMessage="payment done, go back to main page"
         stripe={stripe}
-        clientSecret={clientSecret}
-        onClick={doRequest}
-        onPaymentSuccess={() => {
-          console.log('wow, payment done....store the order info into db now.');
+        clientSecret={charge.clientSecret}
+        onClick={() => doRequest('/api/create-payment')}
+        onPaymentSuccess={async () => {
+          try {
+            await doRequest('/api/success-payment');
+            router.push('/');
+          } catch (error: any) {
+            throw new Error(error.message);
+          }
         }}
       />
     </>

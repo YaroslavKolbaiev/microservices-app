@@ -1,19 +1,16 @@
-import { OrderCard } from '@/componetns';
 import { Order } from '@/types/Order';
-import { CurrentUser } from '@/types/User';
 
-const ShowOrder = ({ data }: { data: Order }) => {
+export default function Orders({ data }: { data: Order[] }) {
+  console.log(data);
   return (
-    <section className="flex justify-center pt-5">
-      <OrderCard order={data} />
+    <section className="max-w-md mx-auto mt-20">
+      <div className="text-white">MY ORDERS</div>
     </section>
   );
-};
+}
 
 export const getServerSideProps = async (context: any) => {
-  const { order } = context.params;
-
-  const res = await fetch(`http://localhost:3003/api/orders/${order}`, {
+  const res = await fetch(`http://localhost:3003/api/orders/`, {
     method: 'GET',
     headers: {
       'Content-type': 'application/json',
@@ -26,5 +23,3 @@ export const getServerSideProps = async (context: any) => {
 
   return { props: { data } };
 };
-
-export default ShowOrder;

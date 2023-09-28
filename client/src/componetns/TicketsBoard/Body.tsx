@@ -1,17 +1,20 @@
+import { ProgressContext } from '@/Context/UserContext';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useContext } from 'react';
 
 interface Props {
   title: string;
   price: string;
   index: number;
   id: string;
-  setProgress: (value: boolean) => void;
+  // setProgress: (value: boolean) => void;
 }
 
-const Body = ({ title, price, index, id, setProgress }: Props) => {
+const Body = ({ title, price, index, id }: Props) => {
   const bgColor = index % 2 === 0 ? 'bg-white' : 'bg-gray-50';
+
+  const { setProgress } = useContext(ProgressContext);
   return (
     <tr className={`${bgColor} border-b dark:bg-zinc-800`}>
       <th
@@ -27,7 +30,7 @@ const Body = ({ title, price, index, id, setProgress }: Props) => {
         {title}
       </th>
       <td className="px-6 py-4">${price}</td>
-      <td className="px-6 py-4 relative">
+      <td className="px-6 py-4">
         <Link
           onClick={() => setProgress(true)}
           href={`/tickets/${id}`}

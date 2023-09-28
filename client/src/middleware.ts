@@ -5,12 +5,12 @@ import type { NextRequest } from 'next/server';
 export function middleware(request: NextRequest) {
   const hasCookie = request.cookies.get('token')?.value;
 
-  if (hasCookie !== 'null') {
-    const redireHome = new URL('/', request.url);
-    return NextResponse.redirect(redireHome);
+  if (hasCookie === 'expired' || !hasCookie) {
+    return NextResponse.next();
   }
 
-  return NextResponse.next();
+  const redireHome = new URL('/', request.url);
+  return NextResponse.redirect(redireHome);
 }
 
 // See "Matching Paths" below to learn more
