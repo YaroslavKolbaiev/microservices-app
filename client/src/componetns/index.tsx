@@ -7,6 +7,7 @@ import AuthLink from './Auth/AuthLink';
 import TicketForm from './TicketForm/TicketForm';
 import TicketsBoard from './TicketsBoard/TicketsBoard';
 import OrderCard from './OrderCard/OrderCard';
+import MyOrders from './OrderCard/MyOrders';
 
 export {
   Nav,
@@ -17,4 +18,6 @@ export {
   AuthLink,
   TicketsBoard,
   OrderCard,
+  TicketForm,
+  MyOrders,
 };

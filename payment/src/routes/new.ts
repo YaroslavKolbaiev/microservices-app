@@ -10,9 +10,9 @@ import {
 } from '@irickmcrs/common';
 import { Order } from '../models/Payment-Order';
 import { stripe } from '../stripe';
-import { Payment } from '../models/Payment';
-import { PaymentCreatedPublidher } from '../events/publishers/payment-created-publisher';
-import { natsWrapper } from '../nats-wraper';
+// import { Payment } from '../models/Payment';
+// import { PaymentCreatedPublidher } from '../events/publishers/payment-created-publisher';
+// import { natsWrapper } from '../nats-wraper';
 
 const router = express.Router();
 
@@ -66,7 +66,7 @@ router.post(
     // });
 
     // res.status(201).send({ id: payment.id });
-    res.status(201).send({ clientSecret: charge.client_secret });
+    res.status(201).send({ clientSecret: charge.client_secret, id: charge.id });
   }
 );
 

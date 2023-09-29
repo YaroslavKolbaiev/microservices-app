@@ -2,20 +2,26 @@
 
 import { toastOptions } from '@/utils/toastOptions';
 import { usePathname, useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { AuthButton, AuthInput, AuthLink, TermsAndConditions } from '..';
 import useRequest from '@/hooks/use-request';
+import { ProgressContext } from '@/Context/UserContext';
 
 const AuthForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
+
   const path = usePathname()?.slice(1);
   const router = useRouter();
+
   const isSignUpPage = path === 'sign-up';
   const isSignInPage = path === 'sign-in';
+
+  const { setProgress } = useContext(ProgressContext);
+
   // IMPORTANT !!! FOR AUTHORIZATION REQUEST MUST BE SENT FROM CLIENT
   // IN ORDER TO SET COOKIES.
   // ****** CHANGE PATH TO JUST /api/users/${path} WHIT KUBERNETES
@@ -43,6 +49,10 @@ const AuthForm = () => {
       router.push('/');
     }
   };
+
+  useEffect(() => {
+    setProgress(false);
+  }, []);
 
   return (
     <>

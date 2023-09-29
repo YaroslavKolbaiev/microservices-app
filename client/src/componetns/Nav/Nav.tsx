@@ -7,7 +7,7 @@ import DropDown from './DropDown';
 import { ProgressContext } from '@/Context/UserContext';
 
 const Nav = ({ currentUser }: { currentUser: CurrentUser }) => {
-  const { progress, setProgress } = useContext(ProgressContext);
+  const { progress } = useContext(ProgressContext);
 
   return (
     <nav className="bg-slate-700 h-24 px-8 flex items-center justify-between relative">

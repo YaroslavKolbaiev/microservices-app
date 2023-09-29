@@ -18,14 +18,17 @@ currentUserRouter.get(
      */
 
     // IMPLEMENTATION WITH COOKIE PARSER
-    const tokken = req.headers.cookie?.split('=')[1];
+    // *********** WHEN YOU RETURN TO KUBERNETES CHECK CURRENTUSER MIDDLEWARE
+    // HOW COOKIES ARE IMPLEMENTED, BECAUSE BROUSER SENDS TWO COOKIES
+    // TOKEN AND STRIPE ****************************************
+    const tokken = req.cookies.token;
     if (!tokken) {
       return res.send({ currentUser: null });
     }
     try {
       const payload = jwtHelper.validateAccessToken(tokken);
       if (!payload) {
-        res.cookie('token', null);
+        res.cookie('token', 'expired');
       }
       res.send({ currentUser: payload });
     } catch (error) {

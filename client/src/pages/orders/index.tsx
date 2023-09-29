@@ -1,10 +1,10 @@
+import { MyOrders } from '@/componetns';
 import { Order } from '@/types/Order';
 
 export default function Orders({ data }: { data: Order[] }) {
-  console.log(data);
   return (
     <section className="max-w-md mx-auto mt-20">
-      <div className="text-white">MY ORDERS</div>
+      <MyOrders data={data} />
     </section>
   );
 }
