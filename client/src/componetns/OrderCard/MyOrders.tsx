@@ -1,12 +1,18 @@
 import { ProgressContext } from '@/Context/UserContext';
 import { Order } from '@/types/Order';
+import { toastOptions } from '@/utils/toastOptions';
 import { useEffect, useContext } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-const MyOrders = ({ data }: { data: Order[] }) => {
+const MyOrders = ({ data }: { data: Order[] | null }) => {
   const { setProgress } = useContext(ProgressContext);
 
   useEffect(() => {
     setProgress(false);
+    if (!data) {
+      toast.error('Internal Server Error', toastOptions);
+    }
   }, []);
 
   return (
@@ -15,7 +21,7 @@ const MyOrders = ({ data }: { data: Order[] }) => {
         My Orders
       </h2>
       <ul className="divide-y divide-gray-200 dark:divide-gray-700 px-5">
-        {data.map(({ id, ticket, status }) => (
+        {data?.map(({ id, ticket, status }) => (
           <li key={id} className="pb-3 sm:pb-4">
             <div className="flex items-center space-x-4">
               <div className="flex-1 min-w-0">
@@ -33,6 +39,7 @@ const MyOrders = ({ data }: { data: Order[] }) => {
           </li>
         ))}
       </ul>
+      <ToastContainer />
     </>
   );
 };
