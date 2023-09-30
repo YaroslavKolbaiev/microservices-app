@@ -6,22 +6,28 @@ export default async function handler(
 ) {
   const { title, price } = request.body;
 
-  // change to /api/application/ with kubernetes
-  const res = await fetch('http://localhost:3002/api/application/', {
-    method: 'POST',
-    body: JSON.stringify({ title, price }),
-    headers: {
-      'Content-type': 'application/json',
-      cookie: `${request.cookies.token}`,
-    },
-    credentials: 'include', // include credentials for local networking. WHY I REMOVED IT FOR KUBERNETES ???
-  });
+  try {
+    // change to /api/application/ with kubernetes
+    const res = await fetch('http://localhost:3002/api/application/', {
+      method: 'POST',
+      body: JSON.stringify({ title, price }),
+      headers: {
+        'Content-type': 'application/json',
+        cookie: `${request.cookies.token}`,
+      },
+      credentials: 'include', // include credentials for local networking. WHY I REMOVED IT FOR KUBERNETES ???
+    });
 
-  const data = await res.json();
+    const data = await res.json();
 
-  if (!res.ok) {
-    return response.status(500).send(data);
+    if (!res.ok) {
+      return response.status(500).send(data);
+    }
+
+    response.status(201).send(data);
+  } catch (error) {
+    response
+      .status(500)
+      .send({ errors: [{ message: 'Internal Server Error' }] });
   }
-
-  response.status(201).send(data);
 }

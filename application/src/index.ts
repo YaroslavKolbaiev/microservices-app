@@ -37,8 +37,8 @@ const start = async () => {
     process.on('SIGINT', () => natsWrapper.client.close());
     process.on('SIGTERM', () => natsWrapper.client.close());
     await mongoose.connect(process.env.mongoUrl); // with mongo Atlas
-  } catch (error) {
-    console.log(error);
+  } catch (error: any) {
+    throw new Error(error.message);
   }
 
   new OrderCreatedListener(natsWrapper.client).listen();
