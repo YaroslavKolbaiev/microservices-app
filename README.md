@@ -85,3 +85,18 @@ npm publish --access public
 npm update <pakage_name>
 
 ## NATS
+
+To fix, find the following lines of code in src/test/setup.ts:
+
+declare global {
+namespace NodeJS {
+export interface Global {
+signin(): string[];
+}
+}
+}
+change to:
+
+declare global {
+var signin: (id?: string) => string[];
+}
