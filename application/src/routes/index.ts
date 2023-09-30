@@ -4,7 +4,9 @@ import { Ticket } from '../models/Ticket';
 export const indexRouter = express.Router();
 
 indexRouter.get('/api/application', async (req: Request, res: Response) => {
-  const tickets = await Ticket.find({}); // to find all data in collection
+  // to find all ticket available for purchase
+  // tickets with orderId property means already reserved
+  const tickets = await Ticket.find({ orderId: undefined });
 
   res.send(tickets);
 });

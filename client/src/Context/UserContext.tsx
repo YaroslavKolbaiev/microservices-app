@@ -1,41 +1,35 @@
 'use client';
 
-import { userService } from '@/services/userServices';
-import { CurrentUser } from '@/types/User';
-import React, {
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import React, { Dispatch, SetStateAction, useMemo, useState } from 'react';
 
 type PropsUser = {
-  currentUser: CurrentUser | null;
-  setCurrentUser: Dispatch<SetStateAction<CurrentUser | null>>;
+  progress: boolean;
+  setProgress: Dispatch<SetStateAction<boolean>>;
 };
 
-export const UserContext = React.createContext<PropsUser>({
-  currentUser: null,
-  setCurrentUser: () => {},
+export const ProgressContext = React.createContext<PropsUser>({
+  progress: false,
+  setProgress: () => {},
 });
 
 type Props = {
   children: React.ReactNode;
 };
 
-export function UserProvider({ children }: Props) {
-  const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
+export function ProgressProvider({ children }: Props) {
+  const [progress, setProgress] = useState<boolean>(false);
 
   const contextValue = useMemo(
     () => ({
-      currentUser,
-      setCurrentUser,
+      progress,
+      setProgress,
     }),
-    [currentUser]
+    [progress]
   );
 
   return (
-    <UserContext.Provider value={contextValue}>{children}</UserContext.Provider>
+    <ProgressContext.Provider value={contextValue}>
+      {children}
+    </ProgressContext.Provider>
   );
 }

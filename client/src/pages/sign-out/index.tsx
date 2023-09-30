@@ -1,28 +1,20 @@
 'use client';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { authRequest } from '@/services/authRequest';
+import useRequest from '@/hooks/use-request';
 
 export default function SignOut() {
   const router = useRouter();
 
-  const signOut = async () => {
-    try {
-      const res = await authRequest(
-        // change path when use kubernetes to just "/api/users/${path}"
-        // it is possible when request is sent from browser(means client)
-        // `/api/users/sign-out`,
-        'http://localhost:3000/api/users/sign-out',
-        'POST'
-      );
-      router.push('/');
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const { doRequest } = useRequest({
+    // url: `http://localhost:3000/api/users/${path}`,
+    method: 'POST',
+    body: {},
+    onSuccess: () => router.push('/'),
+  });
 
   useEffect(() => {
-    signOut();
+    doRequest('http://localhost:3000/api/users/sign-out');
   }, []);
 
   return (

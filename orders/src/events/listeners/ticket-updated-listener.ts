@@ -15,20 +15,35 @@ export class TicketUpdatedListener extends Listener<TicketUpdatedEvent> {
   async onMessage(data: TicketUpdatedEvent['data'], msg: Message) {
     const { title, price, version } = data;
 
-    /** custom method to find ticket by id and version implemented in Order-Ticket model */
-    const ticket = await Ticket.findByIdAndVersion(data);
+    try {
+      /** custom method to find ticket by id and version implemented in Order-Ticket model */
+      const ticket = await Ticket.findByIdAndVersion(data);
 
-    if (!ticket) {
-      throw new NotFoundError();
+      ticket?.set({
+        title,
+        price,
+        version,
+      });
+
+      await ticket?.save();
+    } catch (error) {
+      throw new Error('ticket not found');
     }
 
-    ticket.set({
-      title,
-      price,
-      version,
-    });
+    /** custom method to find ticket by id and version implemented in Order-Ticket model */
+    // const ticket = await Ticket.findByIdAndVersion(data);
 
-    await ticket.save();
+    // if (!ticket) {
+    //   throw new Error('ticket not found');
+    // }
+
+    // ticket.set({
+    //   title,
+    //   price,
+    //   version,
+    // });
+
+    // await ticket.save();
 
     msg.ack();
   }
