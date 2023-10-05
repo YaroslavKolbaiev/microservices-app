@@ -12,15 +12,19 @@ export class OrderCreatedListener extends Listener<OrderCreatedEvent> {
   async onMessage(data: OrderCreatedEvent['data'], msg: Message) {
     const { id, version, userId, status, ticket } = data;
 
-    const order = Order.build({
-      id,
-      version,
-      userId,
-      status,
-      price: ticket.price,
-    });
+    try {
+      const order = Order.build({
+        id,
+        version,
+        userId,
+        status,
+        price: ticket.price,
+      });
 
-    await order.save();
+      await order.save();
+    } catch (error) {
+      throw new Error('Internal Server Error');
+    }
 
     msg.ack();
   }

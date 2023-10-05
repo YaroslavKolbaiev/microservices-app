@@ -1,10 +1,9 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
 
-export default async function handler(
-  request: NextApiRequest,
-  response: NextApiResponse
-) {
-  const { title, price } = request.body;
+export async function POST(request: NextRequest) {
+  const { title, price } = await request.json();
+
+  const token = request.cookies.get('token');
 
   try {
     // change to /api/application/ with kubernetes
@@ -13,7 +12,7 @@ export default async function handler(
       body: JSON.stringify({ title, price }),
       headers: {
         'Content-type': 'application/json',
-        cookie: `${request.cookies.token}`,
+        cookie: `${token?.value}`,
       },
       credentials: 'include', // include credentials for local networking. WHY I REMOVED IT FOR KUBERNETES ???
     });
@@ -21,13 +20,14 @@ export default async function handler(
     const data = await res.json();
 
     if (!res.ok) {
-      return response.status(500).send(data);
+      return NextResponse.json(data, { status: 500 });
     }
 
-    response.status(201).send(data);
+    return NextResponse.json(data, { status: 200 });
   } catch (error) {
-    response
-      .status(500)
-      .send({ errors: [{ message: 'Internal Server Error' }] });
+    return NextResponse.json(
+      { errors: [{ message: 'Internal Server Error' }] },
+      { status: 500 }
+    );
   }
 }

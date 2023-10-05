@@ -21,7 +21,7 @@ currentUserRouter.get(
     // *********** WHEN YOU RETURN TO KUBERNETES CHECK CURRENTUSER MIDDLEWARE
     // HOW COOKIES ARE IMPLEMENTED, BECAUSE BROUSER SENDS TWO COOKIES
     // TOKEN AND STRIPE ****************************************
-    const tokken = req.cookies.token;
+    const tokken = req.headers.cookie;
     if (!tokken) {
       return res.send({ currentUser: null });
     }

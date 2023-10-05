@@ -1,7 +1,8 @@
 'use client';
 
-import { ProgressContext } from '@/Context/UserContext';
+import { ProgressContext } from '@/Context/ProgressContext';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useContext } from 'react';
 
 interface Props {
@@ -12,15 +13,20 @@ interface Props {
 
 const NavLink = ({ path, name, dropDownHandler }: Props) => {
   const { setProgress } = useContext(ProgressContext);
+  const pagePath = usePathname();
+
+  const onLinkClick = () => {
+    if (dropDownHandler) {
+      dropDownHandler();
+    }
+
+    if (pagePath !== path) {
+      setProgress(true);
+    }
+  };
   return (
     <Link
-      onClick={() => {
-        if (dropDownHandler) {
-          dropDownHandler();
-        }
-
-        setProgress(true);
-      }}
+      onClick={onLinkClick}
       href={path}
       className="text-white
         text-lg

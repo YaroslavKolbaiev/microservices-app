@@ -1,16 +1,21 @@
 'use client';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import useRequest from '@/hooks/use-request';
+import { UserContext } from '@/Context/UserContext';
 
 export default function SignOut() {
   const router = useRouter();
 
+  const { setUser } = useContext(UserContext);
+
   const { doRequest } = useRequest({
-    // url: `http://localhost:3000/api/users/${path}`,
     method: 'POST',
     body: {},
-    onSuccess: () => router.push('/'),
+    onSuccess: () => {
+      setUser(null);
+      router.push('/');
+    },
   });
 
   useEffect(() => {

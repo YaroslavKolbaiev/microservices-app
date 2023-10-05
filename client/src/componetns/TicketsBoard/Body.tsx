@@ -1,4 +1,4 @@
-import { ProgressContext } from '@/Context/UserContext';
+import { ProgressContext } from '@/Context/ProgressContext';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useContext } from 'react';

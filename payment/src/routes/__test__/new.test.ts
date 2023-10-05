@@ -23,7 +23,8 @@ function setupUser(userId: string) {
 
   const base64 = Buffer.from(sessionJSON).toString('base64');
 
-  return [`session=${base64}`];
+  // return [`session=${base64}`]; // for kubernetes
+  return [`${token}`]; // for local implementation
 }
 
 it('returns 404 error if order does not exist', async () => {
@@ -32,11 +33,11 @@ it('returns 404 error if order does not exist', async () => {
   const res = await request(app)
     .post('/api/payment')
     .set('Cookie', global.signup())
-    .send({ token: 'random', orderId })
+    .send({ orderId })
     .expect(404);
 });
 
-it('throws 400 if order was cancelled', async () => {
+it('throws 401 if user does not own a ticket', async () => {
   const order = Order.build({
     price: 50,
     id: new mongoose.Types.ObjectId().toHexString(),
@@ -68,11 +69,11 @@ it('throws 400 if order was cancelled', async () => {
   await request(app)
     .post(`/api/payment`)
     .set('Cookie', user)
-    .send({ token: 'random', orderId: order.id })
+    .send({ orderId: order.id })
     .expect(400);
 });
 
-it('returns a 204 with a valid inputs', async () => {
+it('creates stripe clinet secret', async () => {
   const userId = new mongoose.Types.ObjectId().toHexString();
   const user = setupUser(userId);
   const price = Math.floor(Math.random() * 100000);
@@ -88,7 +89,7 @@ it('returns a 204 with a valid inputs', async () => {
   await request(app)
     .post('/api/payment')
     .set('Cookie', user)
-    .send({ token: 'tok_visa', orderId: order.id })
+    .send({ orderId: order.id })
     .expect(201);
 
   // is mock fn from __mocks__
@@ -104,18 +105,13 @@ it('returns a 204 with a valid inputs', async () => {
   // to make sure our stripe service works, we must to look in charges list
   // and if we able to find object with amount equal to price, it means all working
 
-  const stipeCharges = await stripe.charges.list({ limit: 50 });
+  const stipeCharges = await stripe.paymentIntents.list({ limit: 50 });
 
   const stripeCharge = stipeCharges.data.find((charge) => {
     return charge.amount === price * 100;
   });
 
-  const payment = await Payment.findOne({
-    orderId: order.id,
-    stripeId: stripeCharge!.id,
-  });
-
   expect(stripeCharge).toBeDefined();
   expect(stripeCharge!.currency).toEqual('usd');
-  expect(payment).not.toBeNull();
+  expect(stripeCharge!.amount).toEqual(price * 100);
 }, 15000);

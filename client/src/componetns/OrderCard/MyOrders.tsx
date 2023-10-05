@@ -1,4 +1,5 @@
-import { ProgressContext } from '@/Context/UserContext';
+'use client';
+import { ProgressContext } from '@/Context/ProgressContext';
 import { Order } from '@/types/Order';
 import { toastOptions } from '@/utils/toastOptions';
 import { useEffect, useContext } from 'react';

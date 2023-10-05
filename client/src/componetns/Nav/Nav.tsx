@@ -1,18 +1,28 @@
 'use client';
 import { useContext, useEffect } from 'react';
 import Link from 'next/link';
-import { CurrentUser } from '@/types/User';
 import NavLink from './NavLink';
 import DropDown from './DropDown';
-import { ProgressContext } from '@/Context/UserContext';
+import { ProgressContext } from '@/Context/ProgressContext';
+import { usePathname } from 'next/navigation';
+import { UserContext } from '@/Context/UserContext';
 
-const Nav = ({ currentUser }: { currentUser: CurrentUser }) => {
-  const { progress } = useContext(ProgressContext);
+const Nav = () => {
+  const { progress, setProgress } = useContext(ProgressContext);
+  const { user } = useContext(UserContext);
+
+  const pagePath = usePathname();
+
+  const onMainPageClick = () => {
+    if (pagePath !== '/') {
+      setProgress(true);
+    }
+  };
 
   return (
     <nav className="bg-slate-700 h-24 px-8 flex items-center justify-between relative">
       <div className="flex h-full items-center">
-        <Link href="/">
+        <Link href="/" onClick={onMainPageClick}>
           <span
             className="text-white 
               text-lg 
@@ -26,12 +36,13 @@ const Nav = ({ currentUser }: { currentUser: CurrentUser }) => {
           </span>
         </Link>
       </div>
-      {currentUser && (
+      {user && (
         <h1 className="text-white text-xl font-bold hidden sm:block">
-          Welcome {currentUser.email}
+          Welcome
+          {user.email}
         </h1>
       )}
-      {currentUser ? (
+      {user ? (
         <>
           <div className="hidden h-full items-center gap-4 md:flex text-slate-400">
             <NavLink path="/orders/" name="My Orders" />

@@ -4,9 +4,10 @@ import useRequest from '@/hooks/use-request';
 import { tailwindClasses } from '@/tailwind/reusableClasses';
 import { Order } from '@/types/Order';
 import { Ticket } from '@/types/Ticket';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { ToastContainer } from 'react-toastify';
-import { ProgressContext } from '@/Context/UserContext';
+import { ProgressContext } from '@/Context/ProgressContext';
+import Image from 'next/image';
 
 const TicketCard = ({ ticket }: { ticket: Ticket }) => {
   const router = useRouter();
@@ -72,7 +73,16 @@ const TicketCard = ({ ticket }: { ticket: Ticket }) => {
               ${isLoading && 'cursor-not-allowed'}
             `}
           >
-            Buy
+            {isLoading ? (
+              <Image
+                width={24}
+                height={24}
+                src="/pulse-rings-multiple.svg"
+                alt="loader"
+              />
+            ) : (
+              'Buy'
+            )}
           </button>
         </div>
       </div>
