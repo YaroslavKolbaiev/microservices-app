@@ -14,23 +14,39 @@ export default ({ method, body, onSuccess }: DoRequest) => {
 
   const doRequest = async (url: string) => {
     setIsLoading(true);
-    const response = await fetch(url, {
-      method,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-      // include credentials for local networking. WHY I REMOVED IT FOR KUBERNETES ???
-      credentials: 'include',
-    });
+    let response;
 
-    const data = await response.json();
+    if (method === 'GET') {
+      response = await fetch(url, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        // body: JSON.stringify(body),
+        // include credentials for local networking. WHY I REMOVED IT FOR KUBERNETES ???
+        credentials: 'include',
+      });
+    }
 
-    if (onSuccess && response.ok) {
+    if (method === 'POST') {
+      response = await fetch(url, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+        // include credentials for local networking. WHY I REMOVED IT FOR KUBERNETES ???
+        credentials: 'include',
+      });
+    }
+
+    const data = await response?.json();
+
+    if (onSuccess && response?.ok) {
       onSuccess(data);
     }
 
-    if (!response.ok) {
+    if (!response?.ok) {
       for (const index in data.errors) {
         toast.error(data.errors[index].message, toastOptions);
       }

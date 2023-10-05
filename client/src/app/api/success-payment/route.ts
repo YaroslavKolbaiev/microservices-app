@@ -1,10 +1,10 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
+import { revalidatePath } from 'next/cache';
+import { NextRequest, NextResponse } from 'next/server';
 
-export default async function handler(
-  request: NextApiRequest,
-  response: NextApiResponse
-) {
-  const { orderId, stripeId } = request.body;
+export async function POST(request: NextRequest) {
+  const { orderId, stripeId } = await request.json();
+
+  const token = request.cookies.get('token');
 
   // change to /api/application/ with kubernetes
   const res = await fetch('http://localhost:3005/api/success/', {
@@ -12,7 +12,7 @@ export default async function handler(
     body: JSON.stringify({ orderId, stripeId }),
     headers: {
       'Content-type': 'application/json',
-      cookie: `${request.cookies.token}`,
+      cookie: `${token?.value}`,
     },
     credentials: 'include', // include credentials for local networking. WHY I REMOVED IT FOR KUBERNETES ???
   });
@@ -20,8 +20,10 @@ export default async function handler(
   const data = await res.json();
 
   if (!res.ok) {
-    return response.status(500).send(data);
+    return NextResponse.json(data, { status: 500 });
   }
 
-  response.status(201).send(data);
+  revalidatePath('/');
+
+  return NextResponse.json(data, { status: 201 });
 }

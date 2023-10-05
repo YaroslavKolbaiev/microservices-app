@@ -4,7 +4,8 @@ import { tailwindClasses } from '@/tailwind/reusableClasses';
 import useRequest from '@/hooks/use-request';
 import { ToastContainer } from 'react-toastify';
 import { useRouter } from 'next/navigation';
-import { ProgressContext } from '@/Context/UserContext';
+import { ProgressContext } from '@/Context/ProgressContext';
+import Image from 'next/image';
 
 const TicketForm = () => {
   const [title, setTitle] = useState('');
@@ -80,7 +81,16 @@ const TicketForm = () => {
             ${isLoading && 'cursor-not-allowed'}
           `}
         >
-          Submit
+          {isLoading ? (
+            <Image
+              width={24}
+              height={24}
+              src="/pulse-rings-multiple.svg"
+              alt="loader"
+            />
+          ) : (
+            'Submit'
+          )}
         </button>
       </form>
       <ToastContainer />
