@@ -5,20 +5,20 @@ import mongoose from 'mongoose';
 it('returs 404 if ticket not found', async () => {
   const id = new mongoose.Types.ObjectId().toHexString(); // generate valid mongo ID for test
   const res = await request(app)
-    .get(`/api/application/${id}`)
+    .get(`/api-service/application/${id}`)
     .send()
     .expect(404);
 });
 
 it('returs ticket if ticket is found', async () => {
   const res = await request(app)
-    .post('/api/application')
+    .post('/api-service/application')
     .set('Cookie', global.signup())
     .send({ title: 'Hello World!', price: 10 })
     .expect(201);
 
   const ticketResponse = await request(app)
-    .get(`/api/application/${res.body.id}`)
+    .get(`/api-service/application/${res.body.id}`)
     /** cookie is not set because ticket may see even not authenticated person */
     .send()
     .expect(200);

@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useContext } from 'react';
+import { useEffect, useContext } from 'react';
 import { Ticket } from '@/types/Ticket';
 import Head from './Head';
 import Body from './Body';

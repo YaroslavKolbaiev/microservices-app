@@ -1,19 +1,20 @@
 import TicketCard from '@/componetns/TicketCard/TicketCard';
 import { Ticket } from '@/types/Ticket';
-import { getData } from '@/utils/wait';
 
 const getTicket = async (ticketId: string) => {
-  const res = await fetch(`http://localhost:3002/api/application/${ticketId}`, {
-    method: 'GET',
-    headers: {
-      'Content-type': 'application/json',
-    },
-  });
+  const res = await fetch(
+    `http://application-srv.default.svc.cluster.local:3000/api-service/application/${ticketId}`,
+    {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json',
+      },
+    }
+  );
 
   const data = await res.json();
 
   if (!res.ok) {
-    // This will activate the closest `error.tsx` Error Boundary
     const errorMessage = data.errors[0].message;
     throw new Error(errorMessage);
   }

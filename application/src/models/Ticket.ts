@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-// import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 
 interface TicketAttrs {
   title: string;
@@ -14,7 +13,6 @@ interface TicketDoc extends mongoose.Document {
   price: number;
   userId: string;
   version: number;
-  /** string or undifined */
   orderId?: string;
 }
 
@@ -51,9 +49,6 @@ const ticketSchema = new mongoose.Schema(
     versionKey: 'version',
   }
 );
-
-/** 'updateIfCurrentPlugin' is a plugin to solve a concurency issue */
-// ticketSchema.plugin(updateIfCurrentPlugin, { strategy: 'timestamp' });
 
 ticketSchema.statics.build = (attrs: TicketAttrs) => {
   return new Ticket(attrs);

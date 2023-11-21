@@ -1,6 +1,4 @@
-import 'dotenv/config';
 import { OrderListener } from './events/order-listener';
-// import { natsWrapper } from './nats-wraper';
 import nats from 'node-nats-streaming';
 
 if (!process.env.NATS_CLIENT_ID) {
@@ -22,23 +20,6 @@ export const stan = nats.connect(
 );
 
 const start = async () => {
-  // try {
-  //   await natsWrapper.connect(
-  //     process.env.NATS_CLUSTER_ID,
-  //     process.env.NATS_CLIENT_ID,
-  //     process.env.NATS_URL
-  //   );
-  //   natsWrapper.client.on('close', () => {
-  //     console.log('NATS is closed...');
-  //     process.exit();
-  //   });
-
-  //   process.on('SIGINT', () => natsWrapper.client.close());
-  //   process.on('SIGTERM', () => natsWrapper.client.close());
-  // } catch (error) {
-  //   console.log(error);
-  // }
-
   stan.on('connect', () => {
     console.log('Listener connected to NATS', process.env.NATS_CLIENT_ID);
 

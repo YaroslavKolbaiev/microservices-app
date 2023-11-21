@@ -5,16 +5,18 @@ export async function POST(request: NextRequest) {
 
   const token = request.cookies.get('token');
 
-  // change to /api/application/ with kubernetes
-  const res = await fetch('http://localhost:3005/api/payment/', {
-    method: 'POST',
-    body: JSON.stringify({ orderId }),
-    headers: {
-      'Content-type': 'application/json',
-      cookie: `${token?.value}`,
-    },
-    credentials: 'include', // include credentials for local networking. WHY I REMOVED IT FOR KUBERNETES ???
-  });
+  const res = await fetch(
+    'http://payment-srv.default.svc.cluster.local:3000/api-service/payment/',
+    {
+      method: 'POST',
+      body: JSON.stringify({ orderId }),
+      headers: {
+        'Content-type': 'application/json',
+        cookie: `${token?.value}`,
+      },
+      credentials: 'include',
+    }
+  );
 
   const data = await res.json();
 

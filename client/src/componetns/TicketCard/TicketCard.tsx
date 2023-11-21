@@ -14,10 +14,9 @@ const TicketCard = ({ ticket }: { ticket: Ticket }) => {
   const { setProgress } = useContext(ProgressContext);
 
   const { doRequest, isLoading } = useRequest({
-    // url: '/api/create-order',
     method: 'POST',
     body: { ticketId: ticket.id },
-    onSuccess: (data: Order) => router.push(`/orders/${data.id}`),
+    onSuccess: (data: Order) => router.push(`/order/${data.id}`),
   });
 
   useEffect(() => {

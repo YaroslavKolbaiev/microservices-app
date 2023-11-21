@@ -1,5 +1,6 @@
 'use client';
-import { useContext, useEffect } from 'react';
+
+import { useContext } from 'react';
 import Link from 'next/link';
 import NavLink from './NavLink';
 import DropDown from './DropDown';
@@ -38,8 +39,7 @@ const Nav = () => {
       </div>
       {user && (
         <h1 className="text-white text-xl font-bold hidden sm:block">
-          Welcome
-          {user.email}
+          Welcome {user?.email}
         </h1>
       )}
       {user ? (

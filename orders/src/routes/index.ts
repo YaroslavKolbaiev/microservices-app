@@ -5,7 +5,7 @@ import { Order } from '../models/Order';
 export const indexRouter = express.Router();
 
 indexRouter.get(
-  '/api/orders',
+  '/api-service/orders',
   requireAuth,
   async (req: Request, res: Response) => {
     /** find all orders of user that made a request */

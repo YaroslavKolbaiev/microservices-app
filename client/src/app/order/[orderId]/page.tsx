@@ -8,14 +8,17 @@ const getOrder = async (orderId: string) => {
 
   const token = cookieStore.get('token');
 
-  const res = await fetch(`http://localhost:3003/api/orders/${orderId}`, {
-    method: 'GET',
-    headers: {
-      'Content-type': 'application/json',
-      cookie: `${token?.value}`,
-    },
-    credentials: 'include',
-  });
+  const res = await fetch(
+    `http://orders-srv.default.svc.cluster.local:3000/api-service/orders/${orderId}`,
+    {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json',
+        cookie: `${token?.value}`,
+      },
+      credentials: 'include',
+    }
+  );
 
   const data = await res.json();
 

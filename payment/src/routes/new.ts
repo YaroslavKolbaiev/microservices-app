@@ -14,7 +14,7 @@ import { stripe } from '../stripe';
 const router = express.Router();
 
 router.post(
-  '/api/payment/',
+  '/api-service/payment/',
   requireAuth,
   [body('orderId').not().isEmpty()],
   validateRequest,

@@ -16,7 +16,7 @@ import { natsWrapper } from '../nats-wraper';
 const router = express.Router();
 
 router.post(
-  '/api/success/',
+  '/api-service/success/',
   requireAuth,
   [body('stripeId').not().isEmpty(), body('orderId').not().isEmpty()],
   validateRequest,

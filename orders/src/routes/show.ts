@@ -5,7 +5,7 @@ import { Order } from '../models/Order';
 export const showRouter = express.Router();
 
 showRouter.get(
-  '/api/orders/:orderId',
+  '/api-service/orders/:orderId',
   requireAuth,
   async (req: Request, res: Response) => {
     const { orderId } = req.params;

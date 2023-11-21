@@ -1,14 +1,12 @@
-import 'dotenv/config'; // you dont need this lib if you use docker
 import mongoose from 'mongoose';
 import { app } from './app';
 import { natsWrapper } from './nats-wraper';
 import { OrderCreatedListener } from './events/listeners/order-created-listener';
 import { orderCancelledListener } from './events/listeners/order-cancelled-listener';
 
-const PORT = 3002;
+const PORT = 3000;
 
 const start = async () => {
-  // check if MONGO_URL and JWT exists in env before running code.
   if (!process.env.JWT_KEY) {
     throw new Error('JWT must be defined');
   }
@@ -36,7 +34,7 @@ const start = async () => {
     });
     process.on('SIGINT', () => natsWrapper.client.close());
     process.on('SIGTERM', () => natsWrapper.client.close());
-    await mongoose.connect(process.env.mongoUrl); // with mongo Atlas
+    await mongoose.connect(process.env.mongoUrl);
   } catch (error: any) {
     throw new Error(error.message);
   }

@@ -3,10 +3,17 @@ import { Ticket } from '../models/Ticket';
 
 export const indexRouter = express.Router();
 
-indexRouter.get('/api/application', async (req: Request, res: Response) => {
-  // to find all ticket available for purchase
-  // tickets with orderId property means already reserved
-  const tickets = await Ticket.find({ orderId: undefined });
+indexRouter.post(
+  '/api-service/application/get-tickets',
+  async (req: Request, res: Response) => {
+    const { skip, limit } = req.body;
+    // to find all ticket available for purchase
+    // tickets with orderId property means already reserved
+    const tickets = await Ticket.find({ orderId: undefined })
+      .skip(skip)
+      .limit(limit);
+    const ticketsCount = (await Ticket.find({ orderId: undefined })).length;
 
-  res.send(tickets);
-});
+    res.send({ tickets, ticketsCount });
+  }
+);

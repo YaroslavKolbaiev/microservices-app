@@ -1,14 +1,12 @@
-import 'dotenv/config'; // you dont need this lib if you use docker
 import mongoose from 'mongoose';
 import { app } from './app';
 import { natsWrapper } from './nats-wraper';
 import { OrderCreatedListener } from './events/listeners/order-created-listener';
 import { OrderCancelledListener } from './events/listeners/order-cancelled-listener';
 
-const PORT = 3005;
+const PORT = 3000;
 
 const start = async () => {
-  // check if MONGO_URL and JWT exists in env before running code.
   if (!process.env.JWT_KEY) {
     throw new Error('JWT must be defined');
   }
