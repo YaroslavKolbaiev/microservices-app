@@ -1,19 +1,32 @@
+import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 // This function can be marked `async` if using `await` inside
-export function middleware(request: NextRequest) {
-  const hasCookie = request.cookies.get('token')?.value;
+export async function middleware(request: NextRequest) {
+  const cookieStore = cookies();
 
-  if (hasCookie === 'expired' || !hasCookie) {
+  const token = cookieStore.get('token');
+
+  const res = await fetch(
+    'http://auth-srv.default.svc.cluster.local:3000/api-service/users/current-user',
+    {
+      credentials: 'include',
+      headers: { cookie: token?.value } as HeadersInit,
+    }
+  );
+
+  const { currentUser } = await res.json();
+
+  if (currentUser) {
     return NextResponse.next();
   }
 
-  const redireHome = new URL('/', request.url);
-  return NextResponse.redirect(redireHome);
+  const redirectHome = new URL('/sign-in', request.url);
+  return NextResponse.redirect(redirectHome);
 }
 
 // See "Matching Paths" below to learn more
 export const config = {
-  matcher: ['/sign-in/:path*', '/sign-up/:path*'],
+  matcher: ['/orders/:path*', '/tickets/:path*'],
 };

@@ -78,5 +78,6 @@ global.signup = () => {
 
   // return a string with the cookie with encoded data
 
-  return [`session=${base64}`];
+  // return [`session=${base64}`];
+  return [`${token}`];
 };

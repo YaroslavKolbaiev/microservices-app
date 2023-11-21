@@ -16,7 +16,7 @@ import { natsWrapper } from '../nats-wraper';
 export const newRouter = express.Router();
 
 newRouter.post(
-  '/api/orders/',
+  '/api-service/orders/',
   requireAuth,
   [
     body('ticketId')

@@ -19,7 +19,7 @@ export default function SignOut() {
   });
 
   useEffect(() => {
-    doRequest('http://localhost:3000/api/users/sign-out');
+    doRequest('/api-service/users/sign-out');
   }, []);
 
   return (

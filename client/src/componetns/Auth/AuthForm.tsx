@@ -22,11 +22,11 @@ const AuthForm = () => {
   const isSignInPage = path === 'sign-in';
 
   const { setProgress } = useContext(ProgressContext);
+
   const { setUser } = useContext(UserContext);
 
   // IMPORTANT !!! FOR AUTHORIZATION REQUEST MUST BE SENT FROM CLIENT
   // IN ORDER TO SET COOKIES.
-  // ****** CHANGE PATH TO JUST /api/users/${path} WHIT KUBERNETES
   const { doRequest, isLoading } = useRequest({
     method: 'POST',
     body: {
@@ -44,7 +44,7 @@ const AuthForm = () => {
       return;
     }
 
-    const res = await doRequest(`http://localhost:3000/api/users/${path}`);
+    const res = await doRequest(`/api-service/users/${path}`);
 
     if (res) {
       router.push('/');

@@ -14,13 +14,11 @@ import { TicketUpdatedPublisher } from '../events/publishers/ticket-updeted-publ
 export const updateRoute = express.Router();
 
 updateRoute.put(
-  '/api/application/:id',
+  '/api-service/application/:id',
   requireAuth,
   [
     body('title').not().isEmpty().withMessage('Title must be valid'),
-    body('price')
-      .isFloat({ gt: 0 }) // float means number which has decimal. gt - means greater then
-      .withMessage('Price Must be valid'),
+    body('price').isFloat({ gt: 0 }).withMessage('Price Must be valid'),
   ],
   validateRequest,
   async (req: Request, res: Response) => {
@@ -63,8 +61,6 @@ updateRoute.put(
      * above is for awareness and not be implemented (at least now) in the project
      */
     new TicketUpdatedPublisher(natsWrapper.client).publish(data);
-
-    // try to implement "UpdateOne"
 
     res.send(ticket);
   }

@@ -10,7 +10,7 @@ it('has a route handler to listen post request', async () => {
 });
 it('can be only accesed if user sign in', async () => {
   await request(app)
-    .post('/api/application')
+    .post('/api-service/application')
     .send({}) // why send ?? try without ??
     .expect(401);
 
@@ -18,7 +18,7 @@ it('can be only accesed if user sign in', async () => {
 });
 it('returns status other than 401 if user is signed in', async () => {
   const res = await request(app)
-    .post('/api/application')
+    .post('/api-service/application')
     .set('Cookie', global.signup())
     .send({}); // why send ?? try without ??
 
@@ -26,7 +26,7 @@ it('returns status other than 401 if user is signed in', async () => {
 });
 it('returns an error if an invalid title is provided', async () => {
   await request(app)
-    .post('/api/application') // request path
+    .post('/api-service/application') // request path
     .set('Cookie', global.signup())
     .send({ title: '', price: 10 }) // request body
     .expect(400);
@@ -38,12 +38,12 @@ it('returns an error if an invalid title is provided', async () => {
 });
 it('returns an error if an invalid price is provided', async () => {
   await request(app)
-    .post('/api/application') // request path
+    .post('/api-service/application') // request path
     .set('Cookie', global.signup())
     .send({ title: 'Opera', price: -10 }) // request body
     .expect(400);
   await request(app)
-    .post('/api/application') // request path
+    .post('/api-service/application') // request path
     .set('Cookie', global.signup())
     .send({ title: 'Opera' }) // request body
     .expect(400);
@@ -54,7 +54,7 @@ it('creates a ticket', async () => {
   expect(tickets.length).toEqual(0);
 
   await request(app)
-    .post('/api/application')
+    .post('/api-service/application')
     .set('Cookie', global.signup())
     .send({
       title: 'Test',
@@ -70,7 +70,7 @@ it('creates a ticket', async () => {
 
 it('publishes an event', async () => {
   await request(app)
-    .post('/api/application')
+    .post('/api-service/application')
     .set('Cookie', global.signup())
     .send({
       title: 'Test',

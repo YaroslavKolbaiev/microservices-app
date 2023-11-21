@@ -8,7 +8,7 @@ import { natsWrapper } from '../nats-wraper';
 export const newTicketRoute = express.Router();
 
 newTicketRoute.post(
-  '/api/application',
+  '/api-service/application',
   requireAuth,
   [
     body('title').not().isEmpty().withMessage('Title must be valid'),
@@ -31,7 +31,6 @@ newTicketRoute.post(
       version: ticket.version,
     };
 
-    /** notify all services that ticket created */
     await new TicketCreatedPublisher(natsWrapper.client).publish(data);
 
     res.status(201).send(ticket);

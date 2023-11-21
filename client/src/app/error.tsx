@@ -17,7 +17,6 @@ export default function Error({
 
   useEffect(() => {
     setProgress(false);
-    // Log the error to an error reporting service
 
     console.log(error.message);
 

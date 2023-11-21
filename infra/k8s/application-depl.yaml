@@ -21,7 +21,7 @@ spec:
                 fieldRef:
                   fieldPath: metadata.name # for each client the POD ID will be used
             - name: NATS_URL
-              value: 'http://localhost:4222'
+              value: 'http://nats-srv:4222'
             - name: NATS_CLUSTER_ID
               value: microservices
             - name: mongoUrl

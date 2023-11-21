@@ -2,9 +2,7 @@
 import { Order } from '@/types/Order';
 import { ToastContainer } from 'react-toastify';
 import { useEffect, useState, useMemo } from 'react';
-// import StripeCheckout from 'react-stripe-checkout';
-import 'react-stripe-js/dist/style.css';
-import { CurrentUser } from '@/types/User';
+// import 'react-stripe-js/dist/style.css';
 import Link from 'next/link';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
@@ -13,7 +11,6 @@ import { PayButtonComp } from './PayButton';
 const OrderCard = ({ order }: { order: Order }) => {
   const [minLeft, setMinLeft] = useState<number>(0);
   const [secLeft, setSecLeft] = useState<number>(0);
-  const [orderPayed, setOrderPayed] = useState(false);
 
   const totalSec = useMemo(() => {
     return +new Date(order.expiresAt) - +new Date();
@@ -41,7 +38,7 @@ const OrderCard = ({ order }: { order: Order }) => {
     return () => {
       clearInterval(timerId);
     };
-  }, []);
+  }, [order]);
 
   const timeRemaining = () => {
     return secLeft % 60 < 10
@@ -97,7 +94,7 @@ const OrderCard = ({ order }: { order: Order }) => {
           />
         </div>
 
-        <PayButtonComp orderId={order.id} setSecLeft={setSecLeft} />
+        <PayButtonComp orderId={order.id} />
       </div>
       <ToastContainer />
     </>

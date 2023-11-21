@@ -8,7 +8,7 @@ import { jwtHelper } from '../helpers/jwtHelper';
 export const signInRouter = express.Router();
 
 signInRouter.post(
-  '/api/users/sign-in',
+  '/api-service/users/sign-in',
   [
     body('email').isEmail().withMessage('Email must be valid'),
     body('password')
@@ -36,13 +36,8 @@ signInRouter.post(
       existingUser.email
     );
 
-    // req.session = {
-    //   jwt: userJwt,
-    // }; // kubernetes
-
-    // with cookie parser in course video was also added "withCredentials: true"
     res
-      .cookie('token', userJwt, { httpOnly: true }) // with local networking(only this line)
+      .cookie('token', userJwt, { httpOnly: true })
       .status(200)
       .send(existingUser);
   }

@@ -4,14 +4,17 @@ import { NotFoundError } from '@irickmcrs/common';
 
 export const showRoute = express.Router();
 
-showRoute.get('/api/application/:id', async (req: Request, res: Response) => {
-  const { id } = req.params;
+showRoute.get(
+  '/api-service/application/:id',
+  async (req: Request, res: Response) => {
+    const { id } = req.params;
 
-  const ticket = await Ticket.findById(id);
+    const ticket = await Ticket.findById(id);
 
-  if (!ticket) {
-    throw new NotFoundError();
+    if (!ticket) {
+      throw new NotFoundError();
+    }
+
+    res.status(200).send(ticket);
   }
-
-  res.status(200).send(ticket);
-});
+);

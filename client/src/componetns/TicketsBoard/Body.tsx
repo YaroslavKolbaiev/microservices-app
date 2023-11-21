@@ -1,5 +1,4 @@
 import { ProgressContext } from '@/Context/ProgressContext';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useContext } from 'react';
 
@@ -8,7 +7,6 @@ interface Props {
   price: string;
   index: number;
   id: string;
-  // setProgress: (value: boolean) => void;
 }
 
 const Body = ({ title, price, index, id }: Props) => {

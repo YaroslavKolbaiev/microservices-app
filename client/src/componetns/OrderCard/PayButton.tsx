@@ -3,6 +3,7 @@ import useRequest from '@/hooks/use-request';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { PayNow, loadStripe } from 'react-stripe-js';
+import 'react-stripe-js/dist/style.css';
 
 interface StripeRes {
   clientSecret: string;
@@ -11,15 +12,10 @@ interface StripeRes {
 
 interface Props {
   orderId: string;
-  setSecLeft: (value: number) => void;
 }
 
-export const PayButtonComp = ({ orderId, setSecLeft }: Props) => {
+export const PayButtonComp = ({ orderId }: Props) => {
   const router = useRouter();
-
-  const stripe = loadStripe(
-    'pk_test_51NmwxdHLElqdJu8lqqrbsoikjEW4L32m3oQEFDVMNmeHFcERbkycP2ueLZ9qfreEX3jrfh7AZSoKJKP9tZOKaRbr00a6tT5sBo'
-  );
 
   const [charge, setCharge] = useState<{ clientSecret: string; id: string }>({
     clientSecret: '',
@@ -27,7 +23,6 @@ export const PayButtonComp = ({ orderId, setSecLeft }: Props) => {
   });
 
   const { doRequest, isLoading } = useRequest({
-    // url: '/api/create-payment',
     method: 'POST',
     body: { orderId, stripeId: charge.id },
     onSuccess: (data: StripeRes) => {
@@ -45,13 +40,15 @@ export const PayButtonComp = ({ orderId, setSecLeft }: Props) => {
       <PayNow
         title={isLoading ? 'Loading...' : 'Click To Pay'}
         successMessage="payment done, go back to main page"
-        stripe={stripe}
+        stripe={loadStripe(
+          'pk_test_51NmwxdHLElqdJu8lqqrbsoikjEW4L32m3oQEFDVMNmeHFcERbkycP2ueLZ9qfreEX3jrfh7AZSoKJKP9tZOKaRbr00a6tT5sBo'
+        )}
         clientSecret={charge.clientSecret}
         onClick={() => doRequest('/api/create-payment')}
         onPaymentSuccess={async () => {
           try {
             await doRequest('/api/success-payment');
-            router.push('/');
+            router.replace('/');
           } catch (error: any) {
             throw new Error(error.message);
           }

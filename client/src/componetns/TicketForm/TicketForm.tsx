@@ -14,7 +14,6 @@ const TicketForm = () => {
   const router = useRouter();
 
   const { doRequest, isLoading } = useRequest({
-    // url: '/api/create-ticket',
     method: 'POST',
     body: {
       title,

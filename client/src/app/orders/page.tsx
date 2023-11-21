@@ -1,6 +1,5 @@
 import { MyOrders } from '@/componetns';
 import { Order } from '@/types/Order';
-import { getData } from '@/utils/wait';
 import { cookies } from 'next/headers';
 
 async function getOrders() {
@@ -8,19 +7,21 @@ async function getOrders() {
 
   const token = cookieStore.get('token');
 
-  const res = await fetch(`http://localhost:3003/api/orders/`, {
-    method: 'GET',
-    headers: {
-      'Content-type': 'application/json',
-      cookie: `${token?.value}`,
-    },
-    credentials: 'include',
-  });
+  const res = await fetch(
+    'http://orders-srv.default.svc.cluster.local:3000/api-service/orders/',
+    {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json',
+        cookie: `${token?.value}`,
+      },
+      credentials: 'include',
+    }
+  );
 
   const data = await res.json();
 
   if (!res.ok) {
-    // This will activate the closest `error.js` Error Boundary
     const errorMessage = data.errors[0].message;
     throw new Error(errorMessage);
   }
@@ -29,7 +30,6 @@ async function getOrders() {
 }
 
 export default async function Orders() {
-  // { data }: { data: Order[] | null }
   const { data }: { data: Order[] | null } = await getOrders();
 
   return (

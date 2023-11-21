@@ -22,8 +22,6 @@ export default ({ method, body, onSuccess }: DoRequest) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        // body: JSON.stringify(body),
-        // include credentials for local networking. WHY I REMOVED IT FOR KUBERNETES ???
         credentials: 'include',
       });
     }
@@ -35,7 +33,6 @@ export default ({ method, body, onSuccess }: DoRequest) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(body),
-        // include credentials for local networking. WHY I REMOVED IT FOR KUBERNETES ???
         credentials: 'include',
       });
     }

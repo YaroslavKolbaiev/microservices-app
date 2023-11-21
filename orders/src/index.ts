@@ -1,4 +1,3 @@
-import 'dotenv/config'; // you dont need this lib if you use docker
 import mongoose from 'mongoose';
 import { app } from './app';
 import { natsWrapper } from './nats-wraper';
@@ -7,10 +6,9 @@ import { TicketUpdatedListener } from './events/listeners/ticket-updated-listene
 import { ExpirationCompleteListener } from './events/listeners/expiration-complete-listener';
 import { PaymentCreatedListener } from './events/listeners/payment-created-listener';
 
-const PORT = 3003;
+const PORT = 3000;
 
 const start = async () => {
-  // check if MONGO_URL and JWT exists in env before running code.
   if (!process.env.JWT_KEY) {
     throw new Error('JWT must be defined');
   }
@@ -40,8 +38,6 @@ const start = async () => {
     process.on('SIGINT', () => natsWrapper.client.close());
     process.on('SIGTERM', () => natsWrapper.client.close());
 
-    /** after conncting to NATS server, we start listening to events */
-
     await mongoose.connect(process.env.mongoUrl); // with mongo Atlas
   } catch (error) {
     console.log(error);
@@ -53,7 +49,6 @@ const start = async () => {
   new PaymentCreatedListener(natsWrapper.client).listen();
 
   app.listen(PORT, () => {
-    /** for cubernetes must be same port */
     console.log('Listening on port:', PORT);
   });
 };
